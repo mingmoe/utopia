@@ -1,0 +1,79 @@
+//===-------------------- exception.hpp --------------------===//
+//
+// this file is under the MIT License
+// See https://opensource.org/licenses/MIT for license information.
+// Copyright(c) 2020-2022 moe-org All rights reserved.
+//
+//===-------------------------------------------------------===//
+/// \file
+/// 这个文件声明了utopia::core::Exception和一些常用异常。
+/// 程序中所有抛出的异常都应该是派生于utopia::core::Exception的。
+//===-------------------------------------------------------===//
+
+#pragma once
+
+#include "utopia/abort.hpp"
+#include "utopia/template.hpp"
+#include <boost/stacktrace.hpp>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+
+namespace utopia::core {
+
+    /**
+     * @brief 所有异常的基类
+    */
+    template<StringLiteral Name>
+    class Exception : public std::exception {
+      private:
+
+        std::string                   msg{};
+
+        boost::stacktrace::stacktrace stack{};
+
+        std::exception_ptr            inner_exception{};
+
+      public:
+
+        /**
+         * @brief 构造一个新异常
+         * @param msg 异常信息
+         * @param exception 引发此异常的异常。可为空。
+        */
+        Exception(std::string_view   msg,
+                  std::exception_ptr exception = std::exception_ptr{}) :
+            inner_exception(exception) {
+            this->stack = boost::stacktrace::stacktrace();
+            std::stringstream ss{};
+
+            ss << "===> Exception::" << Name.value << " <===\n"
+               << msg << "\n"
+               << stack;
+
+            this->msg = ss.str();
+
+            debug_break();
+        }
+
+        virtual char const *what() const override {
+            return msg.c_str();
+        }
+
+        /**
+         * @brief 获取异常构造时的堆栈
+        */
+        virtual boost::stacktrace::stacktrace get_stacktrace() const {
+            return stack;
+        }
+    };
+
+    using IOException               = Exception<"IOException">;
+
+    using NullPointerException      = Exception<"NullPointerException">;
+
+    using IllegalParameterException = Exception<"IllegalParameterException">;
+
+
+}   // namespace utopia::core

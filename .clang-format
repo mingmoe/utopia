@@ -1,0 +1,298 @@
+# utopia code format config
+# clang-format 13
+
+Language:        Cpp
+# if not defined. follow LLVM options :-)
+BasedOnStyle:  LLVM
+
+# 访问符修饰
+AccessModifierOffset: -2
+
+# 左括号后的对齐
+AlignAfterOpenBracket: Align
+
+# 数组赋值对齐
+AlignArrayOfStructures: Left
+
+# 连续赋值对齐
+AlignConsecutiveAssignments: AcrossEmptyLines
+
+# 连续位域对齐
+AlignConsecutiveBitFields: AcrossEmptyLines
+
+# 连续声明对齐
+AlignConsecutiveDeclarations: AcrossEmptyLines
+
+# 连续宏对齐
+AlignConsecutiveMacros: AcrossEmptyLines
+
+# 跨越多行的宏的反斜杠对齐
+AlignEscapedNewlines: Right
+
+# 操作数对齐
+AlignOperands: Align
+
+# 对齐尾随注释
+AlignTrailingComments: true
+
+# 是否允许参数到达下一行
+AllowAllArgumentsOnNextLine: false
+
+# 是否允许函数参数声明到第二行
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# 是否允许短代码块缩进到一行
+AllowShortBlocksOnASingleLine: false
+
+# 是否允许短switch case缩进到一行
+AllowShortCaseLabelsOnASingleLine: false
+
+# 是否允许短enum缩进到一行
+AllowShortEnumsOnASingleLine: false
+
+# 决定将什么函数合并到一行
+AllowShortFunctionsOnASingleLine: Empty
+
+# 决定是否将if合并为一行
+AllowShortIfStatementsOnASingleLine: Never
+
+# 决定将什么lambda合并到一行
+AllowShortLambdasOnASingleLine: Empty
+
+# 决定是否将while(true) continue放到一行
+AllowShortLoopsOnASingleLine: false
+
+# 决定函数返回类型声明后是否换行
+AlwaysBreakAfterReturnType: None
+
+# 决定赋值多行文字时等号后面是否换行
+AlwaysBreakBeforeMultilineStrings: false
+
+# 决定如何为模板声明换行
+AlwaysBreakTemplateDeclarations: Yes
+
+# 决定参数换行
+BinPackArguments: false
+BinPackParameters: false
+
+# 决定位域空格
+BitFieldColonSpacing: Both
+
+# 自定义大括号换行
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterCaseLabel: false
+    AfterClass: false
+    AfterControlStatement: Never
+    AfterEnum: false
+    AfterFunction: false
+    AfterNamespace: false
+    AfterStruct: false
+    AfterUnion: false
+    AfterExternBlock: false
+    BeforeCatch: true
+    BeforeElse: true
+    BeforeLambdaBody: true
+    BeforeWhile: true
+    SplitEmptyFunction: false
+    SplitEmptyRecord: false
+    SplitEmptyNamespace: false
+
+# 二元运算符换行设置
+BreakBeforeBinaryOperators: None
+
+# 概念换行
+BreakBeforeConceptDeclarations: true
+
+# 三目运算符换行
+BreakBeforeTernaryOperators: true
+
+# 委托构造函数换行设置
+BreakConstructorInitializers: AfterColon
+
+# 继承列表设置
+BreakInheritanceList: AfterColon
+
+# 格式化是否破坏长字符串
+BreakStringLiterals: false
+
+# 列限制
+ColumnLimit: 80
+
+# 防止被格式化的注释正则表达式
+CommentPragmas: '^no-fmt-comment:'
+
+# 设置紧凑命名空间
+CompactNamespaces: false
+
+# 缩进函数初始化列表和继承列表
+ConstructorInitializerIndentWidth: 4
+
+# 连续缩进宽度
+ContinuationIndentWidth: 4
+
+# c++11列表初始化设置
+Cpp11BracedListStyle: false
+
+# 分析行尾
+DeriveLineEnding: true
+
+# 决定是否在访问修饰符后放置空行
+EmptyLineAfterAccessModifier: Always
+
+# 决定是否在访问修饰符前放置空行
+EmptyLineBeforeAccessModifier: Always
+
+# 决定是否在命名空间结束添加括号
+FixNamespaceComments: true
+
+# include分组设置
+IncludeBlocks: Regroup
+
+# include分组优先级分类
+# 优先级越低越靠前
+IncludeCategories:
+  - Regex:           '^<utopia-configured\.hpp>$'
+    Priority:        20
+    SortPriority:    20
+  - Regex:           '^<(utopia)/'
+    Priority:        20
+    SortPriority:    20
+    # 这个放前面会全匹配了
+  - Regex:           '.*'
+    Priority:        10
+    SortPriority:    10
+
+# 主要头文件表达式
+IncludeIsMainRegex: (_test)?$
+
+# 主要源文件表达式
+IncludeIsMainSourceRegex: \.hpp$
+
+# 访问修饰符拥有自己的缩进级别
+IndentAccessModifiers: false
+
+# switch case后不换行
+IndentCaseBlocks: false
+
+# 缩进switch case标签
+IndentCaseLabels: true
+
+# 缩进外部块
+IndentExternBlock: Indent
+
+# 缩进goto标签
+IndentGotoLabels: true
+
+# 缩进宏
+IndentPPDirectives: BeforeHash
+
+# 缩进概念
+IndentRequires: true
+
+# 缩进的列数
+IndentWidth: 4
+
+# 缩进函数定义
+IndentWrappedFunctionNames: true
+
+# 是否插入未遂括号
+InsertTrailingCommas: None
+
+# lambda缩进设置
+LambdaBodyIndentation: Signature
+
+# 保留的最大空行数量
+MaxEmptyLinesToKeep: 2
+
+# 命名空间缩进
+NamespaceIndentation: All
+
+# 委托构造函数的样式
+# PackConstructorInitializers: NextLine
+
+# TODO: set Penalty
+
+# 指针对齐
+PointerAlignment: Right
+
+# 重新排序注释
+ReflowComments: false
+
+# 排序include
+SortIncludes: CaseSensitive
+
+# 排序using
+SortUsingDeclarations: true
+
+# 各种空格设置
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+
+# 指针限定符放置空格设置
+SpaceAroundPointerQualifiers: After
+
+# 赋值运算符左侧空格
+SpaceBeforeAssignmentOperators: true
+
+# switch case右侧空格
+SpaceBeforeCaseColon: false
+
+# c++11大括号初始化空格设置
+SpaceBeforeCpp11BracedList: false
+
+# 委托构造函数冒号空格设置
+SpaceBeforeCtorInitializerColon: true
+
+# 继承列表好猫空格设置
+SpaceBeforeInheritanceColon: true
+
+# 括号前空格设置
+SpaceBeforeParens: Never
+
+# 在范围foreach冒号之前放置空格
+SpaceBeforeRangeBasedForLoopColon: true
+
+# 是否在方括号之前放置空格
+SpaceBeforeSquareBrackets: false
+
+# 是否在空{}内放置空格
+SpaceInEmptyBlock: false
+
+# 是否在空()内放置空格
+SpaceInEmptyParentheses: false
+
+# 尾随注释之前的空格数
+SpacesBeforeTrailingComments: 3
+
+# 是否在c样式的转换中插入空格
+SpacesInCStyleCastParentheses: false
+
+# 是否在条件语句的判断条件中插入空格
+SpacesInConditionalStatement: false
+
+# 在括号内插入空格
+SpacesInParentheses: false
+
+# 是否在方括号内插入空格
+SpacesInSquareBrackets: false
+
+# 设置语言标准
+Standard: c++20
+
+# 各种宏设置
+StatementAttributeLikeMacros: []
+StatementMacros: []
+TypenameMacros: []
+WhitespaceSensitiveMacros: []
+AttributeMacros: []
+ForEachMacros: []
+IfMacros: []
+
+# tab大小
+TabWidth: 4
+
+# 其他设置
+UseCRLF: false
+UseTab: Never

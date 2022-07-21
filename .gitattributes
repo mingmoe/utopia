@@ -1,0 +1,15 @@
+*.cpp		        text eol=lf working-tree-encoding=UTF-8
+*.c		            text eol=lf working-tree-encoding=UTF-8
+*.hpp		        text eol=lf working-tree-encoding=UTF-8
+*.h		            text eol=lf working-tree-encoding=UTF-8
+*.json		        text eol=lf working-tree-encoding=UTF-8
+*.py		        text eol=lf working-tree-encoding=UTF-8
+*.cmake		        text eol=lf working-tree-encoding=UTF-8
+*.txt		        text eol=lf working-tree-encoding=UTF-8
+
+.clang-format		text eol=lf working-tree-encoding=UTF-8
+.clang-tidy         text eol=lf working-tree-encoding=UTF-8
+.editorconfig       text eol=lf working-tree-encoding=UTF-8
+
+.gitignore          text eol=lf working-tree-encoding=UTF-8
+.gitattributes      text eol=lf working-tree-encoding=UTF-8
