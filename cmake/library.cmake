@@ -41,8 +41,8 @@ target_include_directories(boost SYSTEM INTERFACE "${UTOPIA_LIBRARY}/boost/libs/
 target_include_directories(boost SYSTEM INTERFACE "${UTOPIA_LIBRARY}/boost/libs/stacktrace/include")
 
 if(U_UNDER_LINUX OR U_UNDER_APPLE)
-    message(STATUS "link with libdl for stacktrace")
-    target_link_directories(boost INTERFACE "dl")
+    message(STATUS "link with lib-${CMAKE_DL_LIBS} for stacktrace")
+    target_link_directories(boost INTERFACE ${CMAKE_DL_LIBS})
 endif()
 #=================
 

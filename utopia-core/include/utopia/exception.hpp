@@ -25,7 +25,6 @@ namespace utopia::core {
     /**
      * @brief 所有异常的基类
     */
-    template<StringLiteral Name>
     class Exception : public std::exception {
       private:
 
@@ -44,13 +43,12 @@ namespace utopia::core {
         */
         Exception(std::string_view   msg,
                   std::exception_ptr exception = std::exception_ptr{}) :
-            inner_exception(exception) {
-            this->stack = boost::stacktrace::stacktrace();
+            inner_exception(exception),
+            stack(boost::stacktrace::stacktrace()) {
             std::stringstream ss{};
 
-            ss << "===> Exception::" << Name.value << " <===\n"
-               << msg << "\n"
-               << stack;
+            //::" << Name.value << "
+            ss << "===> Exception <===\n" << msg << "\n" << stack;
 
             this->msg = ss.str();
 
@@ -69,11 +67,64 @@ namespace utopia::core {
         }
     };
 
-    using IOException               = Exception<"IOException">;
+    /**
+     * @brief 使用模板特例化的通用异常。
+    */
+    template<StringLiteral Name>
+    class UniversalException : public Exception {
+      public:
 
-    using NullPointerException      = Exception<"NullPointerException">;
+        /**
+         * @brief 构造一个新异常
+         * @param msg 异常信息
+         * @param exception 引发此异常的异常。可为空。
+        */
+        UniversalException(std::string_view   view,
+                           std::exception_ptr inner = std::exception_ptr{})  :
+            inner_exception(exception),
+            stack(boost::stacktrace::stacktrace()) {
 
-    using IllegalParameterException = Exception<"IllegalParameterException">;
+            std::stringstream ss{};
+
+            ss << "===> Exception::" << Name.value << " <===\n"
+               << msg << "\n"
+               << stack;
+
+            if(inner) {
+                ss << "\n===> With Inner Exception:";
+
+                try {
+                    std::rethrow_exception(inner);
+                }
+                catch(const Exception &e) {
+                    ss << e.what();
+                }
+                catch(const std::exception &e) {
+                    ss << e.what();
+                }
+                catch(const std::string &e) {
+                    ss << e;
+                }
+                catch(const char *e) {
+                    ss << std::string_view{ e };
+                }
+                catch(...) {
+                    return "unknown inner exception";
+                }
+            }
+
+            this->msg = ss.str();
+
+            debug_break();
+        }
+    };
+
+    using IOException          = UniversalException<"IOException">;
+
+    using NullPointerException = UniversalException<"NullPointerException">;
+
+    using IllegalParameterException =
+        UniversalException<"IllegalParameterException">;
 
 
 }   // namespace utopia::core

@@ -20,6 +20,8 @@
 # U_PUBLIC_OS: Windows|Linux|Apple
 # U_PUBLIC_COMPILER: Msvc|Gcc|Clang
 # U_COMPILE_MODE: Debug|Release
+# U_SYSROOT_NAME: 用于标识需要使用的sysroot
+# UTOPIA_SYSROOT: 第三方库使用的sysroot
 
 # 检查编译器
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -101,3 +103,34 @@ if(ANDROID)
     message(STATUS "compile for android")
     set(U_ANDROID_MODE "true")
 endif()
+
+# 设置sysroot_name
+if(U_ANDROID_MODE)
+    set(U_SYSROOT_NAME "android-arm64")
+else()
+    if(U_UNDER_WINDOWS)
+        set(U_SYSROOT_NAME "windows-x64")
+    elseif(U_UNDER_LINUX)
+        set(U_SYSROOT_NAME "linux-x64")
+    elseif(U_UNDER_APPLE)
+        set(U_SYSROOT_NAME "macos-x64")
+    else()
+        message(FATAL_ERROR "unknown os for sysroot")
+    endif()
+endif()
+
+if(U_DEBUG_MODE)
+    set(U_SYSROOT_NAME "${U_SYSROOT_NAME}-Debug")
+elseif(U_RELEASE_MODE)
+    set(U_SYSROOT_NAME "${U_SYSROOT_NAME}-Release")
+else()
+    message(FATAL_ERROR "unknown build type for sysroot")
+endif()
+
+# 设置sysroot
+if(NOT DEFINED UTOPIA_SYSROOT)
+    set(UTOPIA_SYSROOT "${UTOPIA_LIBRARY}/install-tree/${U_SYSROOT_NAME}")
+    message(STATUS "using ${UTOPIA_SYSROOT} as SYSROOT")
+endif()
+
+set(CMAKE_PREFIX_PATH "${UTOPIA_SYSROOT}")

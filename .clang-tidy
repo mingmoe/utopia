@@ -11,7 +11,6 @@ Checks: >-
   llvm-*,
   google-explicit-constructor,
   -modernize-use-auto,
-  -modernize-use-trailing-return-type,
   -readability-avoid-const-params-in-decls
 
 WarningsAsErrors: ''
@@ -21,7 +20,5 @@ HeaderFilterRegex: '^(<)|(")|()utopia/'
 AnalyzeTemporaryDtors: false
 
 FormatStyle:     file
-
-User:            mingmoe
 
 CheckOptions:

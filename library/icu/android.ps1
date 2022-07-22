@@ -2,7 +2,7 @@
 Write-Host "this script only works on linux or WSL"
 
 if(-not($IsLinux)){
-    Write-Host "now isn't linux! exit"
+    Write-Host "this script only support android!"
     return 1
 }
 

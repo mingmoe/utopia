@@ -31,3 +31,6 @@
 [submodule "library/json"]
 	path = library/json
 	url = https://github.com/nlohmann/json.git
+[submodule "library/doctest"]
+	path = library/doctest
+	url = https://github.com/doctest/doctest

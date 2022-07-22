@@ -15,7 +15,8 @@
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
-            }
+            },
+            "addressSanitizerEnabled": true
         },
         {
             "name": "x64-debug",

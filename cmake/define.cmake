@@ -11,12 +11,3 @@ set(UTOPIA_CLIENT "utopia-client")
 set(UTOPIA_SERVER "utopia-server")
 
 set(UTOPIA_LIBRARY "${CMAKE_SOURCE_DIR}/library")
-
-if(NOT DEFINED UTOPIA_SYSROOT)
-    set(UTOPIA_SYSROOT "${UTOPIA_LIBRARY}/install-tree")
-    message(STATUS "using ${UTOPIA_SYSROOT} as SYSROOT")
-endif()
-
-set(CMAKE_PREFIX_PATH "${UTOPIA_SYSROOT}")
-list(APPEND CMAKE_PREFIX_PATH "${UTOPIA_SYSROOT}/SDL")
-list(APPEND CMAKE_PREFIX_PATH "${UTOPIA_SYSROOT}/freetype")
