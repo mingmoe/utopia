@@ -73,9 +73,9 @@ if($android){
 }
 
 # 准备构建
-mkdir "$PSScriptRoot/build" -Force
-mkdir "$PSScriptRoot/install-tree" -Force
-mkdir "$PSScriptRoot/install-tree/$sysroot_name" -Force
+New-Item -Type Directory "$PSScriptRoot/build" -Force
+New-Item -Type Directory "$PSScriptRoot/install-tree" -Force
+New-Item -Type Directory "$PSScriptRoot/install-tree/$sysroot_name" -Force
 
 $InstallPath = ("$PSScriptRoot/install-tree/$sysroot_name").Replace("\","/")
 
@@ -132,7 +132,7 @@ build -name freetype -cmake_args @(
 # BUILD FOR OTHER PROJECT
 #==============================
 Write-Host "build harfbuzz"
-mkdir "$PSScriptRoot/build/$sysroot_name/harfbuzz" -Force
+New-Item -Type Directory "$PSScriptRoot/build/$sysroot_name/harfbuzz" -Force
 $build_dir =  "$PSScriptRoot/build/$sysroot_name/harfbuzz" 
 
 # generate cross build file
