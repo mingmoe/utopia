@@ -35,7 +35,7 @@ u_close_clang_tidy()
 # 设置编译选项
 if(MSVC) # for msvc
     set(U__TEMP__FLAGS_ 
-    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W4 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets /external:W3")
+    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W4 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets /external:W2")
     set(U__TEMP__FLAGS_DEBUG "/Od /MDd")
     set(U__TEMP__FLAGS_RELEASE "/O2 /MD /DNDEBUG")
 

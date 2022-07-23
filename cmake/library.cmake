@@ -14,7 +14,7 @@ add_subdirectory("${UTOPIA_LIBRARY}/fmt" EXCLUDE_FROM_ALL)
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(JSON_Install OFF CACHE INTERNAL "")
 u_add_define(
-    "JSON_DIAGNOSTICS=1" 
+    "JSON_DIAGNOSTICS=1"
     "JSON_HAS_CPP_20"
     "JSON_HAS_FILESYSTEM"
     "JSON_USE_IMPLICIT_CONVERSIONS=1")
@@ -147,3 +147,9 @@ target_include_directories(harfbuzz INTERFACE "${U_HARFBUZZ_INSTALL_DIR}/include
 target_link_libraries(harfbuzz INTERFACE "${U_HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a")
 target_link_libraries(harfbuzz INTERFACE "${U_HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz-subset.a")
 #====================
+
+
+#===== imgui ======
+enable_testing()
+add_subdirectory("${UTOPIA_LIBRARY}/doctest" EXCLUDE_FROM_ALL)
+#=================
