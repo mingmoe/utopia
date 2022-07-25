@@ -1,0 +1,10 @@
+[binaries]
+c = ['(BINARY_PATH)/clang(EXE)', '--target=aarch64-linux-android(API_VERSION)']
+cpp = ['(BINARY_PATH)/clang++(EXE)', '--target=aarch64-linux-android(API_VERSION)']
+strip = ['(BINARY_PATH)/llvm-strip(EXE)']
+
+[target_machine]
+system = 'android'
+cpu_family = 'arm'
+cpu = 'aarch64'
+endian = 'little'

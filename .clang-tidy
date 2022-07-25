@@ -1,0 +1,24 @@
+Checks: >-
+  cert-*,
+  bugprone-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  llvm-*,
+  google-explicit-constructor,
+  -modernize-use-auto,
+  -readability-avoid-const-params-in-decls
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: '^(<)|(")|()utopia/'
+
+AnalyzeTemporaryDtors: false
+
+FormatStyle:     file
+
+CheckOptions:

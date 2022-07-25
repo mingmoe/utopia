@@ -1,0 +1,71 @@
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# this file is under MIT License.
+# See https://opensource.org/licenses/MIT for license information.
+# Copyright (c) 2020-2022 moe-org All rights reserved.
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+set(SKIP_INSTALL_ALL ON)
+
+#===== fmtlib =====
+add_subdirectory("${UTOPIA_LIBRARY}/fmt" EXCLUDE_FROM_ALL)
+#==================
+
+#===== nlohmann/json =====
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(JSON_Install OFF CACHE INTERNAL "")
+u_add_define(
+    "JSON_DIAGNOSTICS=1"
+    "JSON_HAS_CPP_20"
+    "JSON_HAS_FILESYSTEM"
+    "JSON_USE_IMPLICIT_CONVERSIONS=1")
+add_subdirectory("${UTOPIA_LIBRARY}/json" EXCLUDE_FROM_ALL)
+#=========================
+
+#===== eigen =====
+add_library("eigen" INTERFACE)
+target_include_directories(eigen SYSTEM INTERFACE "${UTOPIA_LIBRARY}/eigen")
+#=================
+
+#===== SDL =====
+set(SDL2_DIR "${UTOPIA_SYSROOT}/SDL/cmake")
+find_package("SDL2" REQUIRED CONFIG)
+#===============
+
+#===== FreeType =====
+set(freetype_DIR "${UTOPIA_SYSROOT}/freetype/lib/cmake/freetype")
+find_package("freetype" REQUIRED CONFIG)
+#====================
+
+#======= ICU =======
+# this library is compiled by ourselves
+u_add_subdirectory_at_root("${UTOPIA_LIBRARY}/icu/" EXCLUDE_FROM_ALL)
+#===================
+
+#===== imgui ======
+file(GLOB IMGUI_SOURCE CONFIGURE_DEPENDS "${UTOPIA_LIBRARY}/imgui/*.cpp")
+add_library(imgui STATIC ${IMGUI_SOURCE})
+unset(IMGUI_SOURCE)
+
+target_include_directories(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui")
+target_include_directories(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends")
+
+# backend
+if(U_ANDROID_MODE)
+    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_android.cpp")
+elseif(U_UNDER_WINDOWS)
+    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_win32.cpp")
+elseif(U_UNDER_LINUX)
+    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_vulkan.cpp")
+elseif(U_UNDER_APPLE)
+    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_vulkan.cpp")
+else()
+    message(FATAL_ERROR "unknown imgui backends for your platform!" "send a PR for us!")
+endif()
+#==================
+
+#===== doctest ======
+enable_testing()
+add_subdirectory("${UTOPIA_LIBRARY}/doctest" EXCLUDE_FROM_ALL)
+#====================
+
+u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/import-library.cmake")

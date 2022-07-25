@@ -1,0 +1,36 @@
+[submodule "library/fmt"]
+	path = library/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "library/eigen"]
+	path = library/eigen
+	url = https://gitlab.com/libeigen/eigen
+[submodule "library/boost"]
+	path = library/boost
+	url = https://github.com/boostorg/boost
+[submodule "library/SDL"]
+	path = library/SDL
+	url = https://github.com/libsdl-org/SDL
+[submodule "library/freetype"]
+	path = library/freetype
+	url = https://github.com/freetype/freetype
+[submodule "library/zlib"]
+	path = library/zlib
+	url = https://github.com/madler/zlib
+[submodule "library/libpng"]
+	path = library/libpng
+	url = https://github.com/glennrp/libpng
+[submodule "library/imgui"]
+	path = library/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "library/harfbuzz"]
+	path = library/harfbuzz
+	url = https://github.com/harfbuzz/harfbuzz
+[submodule "library/icu/icu"]
+	path = library/icu/icu
+	url = https://github.com/unicode-org/icu
+[submodule "library/json"]
+	path = library/json
+	url = https://github.com/nlohmann/json.git
+[submodule "library/doctest"]
+	path = library/doctest
+	url = https://github.com/doctest/doctest
