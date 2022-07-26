@@ -89,6 +89,7 @@ jobs:
       # 编译
       - name: Build
         run: |
+          apt -y install ninja-build
           pip install meson
           python ./library/build.py
           cmake -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
