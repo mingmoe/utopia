@@ -205,7 +205,7 @@ def open_log(path:str):
     if os.path.isfile(path) and os.path.exists(path) and os.path.getsize(path) >= 1024 * 1024 * 4:
         broke = True
 
-    handle =  open(path,encoding="utf-8",mode="a")
+    handle =  open(path,encoding="utf-8",mode="a+")
     
     # 截断过大的log文件
     if broke:
@@ -239,6 +239,13 @@ def call_ninja(args: List[str], stdout_file: str, stderr_file: str, work_dir: st
         ninja.wait()
 
         if ninja.returncode != 0:
+            stdout.seek(0,0)
+            stderr.seek(0,0)
+            o = stdout.read()
+            e = stdout.read()
+            print("ERROR")
+            print(f"stdout:{o}\n")
+            print(f"stderr:{e}\n")
             raise Exception(f"ninja failed with return code {ninja.returncode}")
 
 def call_git(args:List[str],work_dir:str):
@@ -298,6 +305,13 @@ class CMakeTask:
                 bufsize=0)
             cmake.wait()
             if cmake.returncode != 0:
+                stdout.seek(0,0)
+                stderr.seek(0,0)
+                o = stdout.read()
+                e = stdout.read()
+                print("ERROR")
+                print(f"stdout:{o}\n")
+                print(f"stderr:{e}\n")
                 raise Exception(f"cmake failed with return code {cmake.returncode}")
 
     def build(self):
@@ -368,6 +382,13 @@ class MesonTask:
 
             meson.wait()
             if meson.returncode != 0:
+                stdout.seek(0,0)
+                stderr.seek(0,0)
+                o = stdout.read()
+                e = stdout.read()
+                print("ERROR")
+                print(f"stdout:{o}\n")
+                print(f"stderr:{e}\n")
                 raise Exception(f"meson failed with return code {meson.returncode}")
 
     def build(self, name: str):
