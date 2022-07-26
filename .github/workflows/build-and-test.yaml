@@ -61,7 +61,7 @@ jobs:
       # 检查
       - name: Validate
         run: |
-          python .\check-format.py -r .\utopia-client\ .\utopia-core\ .\utopia-server\
+          python ./check-format.py -r ./utopia-client ./utopia-core ./utopia-server
 
   #================================================================
   # 构建并进行单元测试
