@@ -55,13 +55,11 @@ jobs:
       # 检出代码
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          submodules: true
 
       # 检查
       - name: Validate
         run: |
-          python ./check-format.py -r ./utopia-client ./utopia-core ./utopia-server
+          python ./check-format.py --clang-format-executable clang-format-14 -r ./utopia-client ./utopia-core ./utopia-server
 
   #================================================================
   # 构建并进行单元测试
