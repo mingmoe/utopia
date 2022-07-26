@@ -78,6 +78,11 @@ jobs:
             ccompiler: clang
 
     runs-on: ubuntu-22.04
+    
+    env:
+      mode: ${{ matrix.mode }}
+      ccompiler: ${{ matrix.ccompiler }}
+      cxxcompiler: ${{ matrix.cxxcompiler }}
 
     steps:
       # 检出代码
@@ -92,8 +97,10 @@ jobs:
           sudo apt -y install ninja-build
           pip install meson
           python ./library/build.py
-          cmake -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
-          cmake --build .
+          mkdir build
+          cd build
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
+          cmake --build . -j2
 
   Build-And-Test-On-Windows:
     needs: [ Check-Code-Format ]
@@ -103,6 +110,9 @@ jobs:
         mode: [ 'Debug','Release' ]
 
     runs-on: windows-2022
+
+    env: 
+      mode: ${{ matrix.mode }}
 
     steps:
       # 检出代码
@@ -116,8 +126,10 @@ jobs:
         run: |
           pip install meson
           python ./library/build.py
-          cmake -DCMAKE_BUILD_TYPE=${mode} -G "Visual Studio 17 2022"
-          cmake --build .
+          mkdir build
+          cd build
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -G "Visual Studio 17 2022"
+          cmake --build . -j2
 
   #================================================================
   # 设置快照tags
