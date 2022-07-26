@@ -17,7 +17,7 @@ function build-android-library($build_args){
         $ndk_path = $env:NDK
     }
     if($null -ne $global:NDK_PATH){
-        $ndk_path = $$global:NDK_PATH
+        $ndk_path = $global:NDK_PATH
     }
 
     if($null -eq $ndk_path){
@@ -75,3 +75,16 @@ function update-library(){
 function clear-logs(){
     Remove-Item -Force -Recurse -Path "$UTOPIA_PROJECT_ROOT/library/*.log"
 }
+
+function commit(){
+    &npm run commit
+}
+
+function release(){
+    &npm run "try-release"
+}
+
+function lint-commit(){
+    &npm run lint-last-commit
+}
+
