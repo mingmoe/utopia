@@ -63,7 +63,7 @@ def parse_args() -> BuildInfo:
     info = BuildInfo()
 
     while index != len(argv):
-        arg = argv[index]
+        arg = argv[index].lower()
 
         if arg == "--ndk":
             index += 1
@@ -76,6 +76,15 @@ def parse_args() -> BuildInfo:
             info.mode = "Release"
         elif arg == "--debug":
             info.mode = "Debug"
+        elif arg == "-h" or arg == "--help":
+            print("options:")
+            print("-h / --help:print this then exit")
+            print("--ndk [path]:set a path to the ndk")
+            print("--android:compiler for android")
+            print("--debug:compiler for debug")
+            print("--release:compiler for release")
+            print("all options are ignore case")
+            exit(0)
         else:
             raise Exception("Unknown argument: " + arg)
 

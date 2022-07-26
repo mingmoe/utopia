@@ -96,7 +96,7 @@ jobs:
         run: |
           sudo apt -y install ninja-build
           pip install meson
-          python ./library/build.py
+          python ./library/build.py --${mode}
           mkdir build
           cd build
           cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
@@ -121,14 +121,20 @@ jobs:
         with:
           submodules: true
 
+      # setup msvc
+      - uses: ilammy/msvc-dev-cmd@v1
+
       # 编译
       - name: Build
+        shell: pwsh
         run: |
+          $env:CC="cl.exe"
+          $env:CXX="cl.exe"
           pip install meson
-          python ./library/build.py
+          python ./library/build.py "--$env:mode"
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -G "Visual Studio 17 2022"
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=$env:mode -G "Visual Studio 17 2022"
           cmake --build . -j2
 
   #================================================================
