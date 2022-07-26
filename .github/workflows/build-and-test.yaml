@@ -89,6 +89,7 @@ jobs:
       # 编译
       - name: Build
         run: |
+          pip install meson
           python ./library/build.py
           cmake -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
           cmake --build .
@@ -112,6 +113,7 @@ jobs:
       # 编译
       - name: Build
         run: |
+          pip install meson
           python ./library/build.py
           cmake -DCMAKE_BUILD_TYPE=${mode} -G "Visual Studio 17 2022"
           cmake --build .
@@ -132,6 +134,10 @@ jobs:
       # 检出代码
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - uses: webfactory/ssh-agent@v0.5.4
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # 配置git
       - name: Config git
