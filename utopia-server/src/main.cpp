@@ -9,8 +9,7 @@
 #include "utopia/exception.hpp"
 #include "utopia/iostream.hpp"
 
-auto main() -> int{
-    
+auto main() -> int {
     auto exception = utopia::core::IOException("unknown exception");
     utopia::core::write_stderr(exception.what());
 
