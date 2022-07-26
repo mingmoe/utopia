@@ -27,14 +27,28 @@ target_include_directories(eigen SYSTEM INTERFACE "${UTOPIA_LIBRARY}/eigen")
 #=================
 
 #===== SDL =====
-set(SDL2_DIR "${UTOPIA_SYSROOT}/SDL/cmake")
 find_package("SDL2" REQUIRED CONFIG)
 #===============
 
 #===== FreeType =====
-set(freetype_DIR "${UTOPIA_SYSROOT}/freetype/lib/cmake/freetype")
 find_package("freetype" REQUIRED CONFIG)
 #====================
+
+#===== libjpeg-turbo =====
+find_package("libjpeg-turbo" REQUIRED CONFIG)
+#=========================
+
+#===== Ogg =====
+find_package("Ogg" REQUIRED CONFIG)
+#===============
+
+#===== Vorbis =====
+find_package("Vorbis" REQUIRED CONFIG)
+#==================
+
+#===== zstd =====
+find_package("zstd" REQUIRED CONFIG)
+#================
 
 #======= ICU =======
 # this library is compiled by ourselves
@@ -59,8 +73,14 @@ elseif(U_UNDER_LINUX)
 elseif(U_UNDER_APPLE)
     target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_vulkan.cpp")
 else()
-    message(FATAL_ERROR "unknown imgui backends for your platform!" "send a PR for us!")
+    message(FATAL_ERROR "unknown imgui backends for your platform!")
 endif()
+
+# close all warnings
+target_compile_options(imgui PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W1>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-W>
+)
 #==================
 
 #===== doctest ======

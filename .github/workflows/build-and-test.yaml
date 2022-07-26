@@ -1,0 +1,153 @@
+# 集成测试/集成部署
+name: CI And CD
+
+# 设置触发事件
+on:
+  push:
+    branches: [ master ]
+
+    paths:
+      # 防止勋章日涅夫触发CI/CD
+      # 防止更新文档触发CI/CD
+      - "**"
+      - "!README.md"
+      - "!docs/**"
+
+  pull_request:
+    branches: [ master ]
+
+    paths:
+      - "**"
+      - "!README.md"
+      - "!docs/**"
+
+jobs:
+  #================================================================
+  # 检查提交信息
+  #================================================================
+  Check-Commit-Message:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 16
+
+      # 安装npm包
+      - name: Npm install
+        run: npm install
+
+      # 检查提交
+      # 检查16次提交
+      - name: Check commit
+        run: |
+          npx commitlint --from HEAD~15 --to HEAD --verbose
+
+  #================================================================
+  # 检查项目
+  #================================================================
+  Check-Code-Format:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      # 检查
+      - name: Validate
+        run: |
+          python .\check-format.py -r .\utopia-client\ .\utopia-core\ .\utopia-server\
+
+  #================================================================
+  # 构建并进行单元测试
+  #================================================================
+  Build-And-Test-On-Linux:
+    needs: [ Check ]
+
+    strategy:
+      matrix:
+        mode: [ 'Debug','Release' ]
+        ccompiler: ['gcc','clang']
+        include:
+          - cxxcompiler: g++
+            ccompiler: gcc
+          - cxxcompiler: clang++
+            ccompiler: clang
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      # 编译
+      - name: Build
+        run: |
+        cmake -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
+        cmake --build .
+
+  Build-And-Test-On-Windows:
+    needs: [ Check ]
+
+    strategy:
+      matrix:
+        mode: [ 'Debug','Release' ]
+
+    runs-on: windows-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      # 编译
+      - name: Build
+        run: |
+        cmake -DCMAKE_BUILD_TYPE=${mode} -G "Visual Studio 17 2022"
+        cmake --build .
+
+  #================================================================
+  # 设置快照tags
+  #================================================================
+  Record-Version:
+    runs-on: ubuntu-latest
+
+    # 不在PR的环境下设置tag
+    if: ${{ github.event_name == 'push' }}
+
+    # 需要能成功构建并进行单元测试
+    needs: [ Build-And-Test-On-Linux, Build-And-Test-On-Windows ]
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 配置git
+      - name: Config git
+        run: |
+          git config --global user.name   mingmoe
+          git config --global user.email  me@kawayi.moe
+
+      # 设置tag
+      - name: Set tag
+        env:
+          # 版本号
+          build_number: ${{ github.run_number }}
+
+        run: |
+          cmake -DU_OPT_GET_VERSION_EXIT=ON -DU_OPT_BUILD_NUMBER=${build_number}
+          tag_version=$(cat version.txt)
+          echo TAG:${tag_version}
+          git tag ${tag_version}
+          git push --tags

@@ -13,7 +13,10 @@ add_library(${UTOPIA_CORE} STATIC
 
 target_include_directories(${UTOPIA_CORE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+target_link_libraries(${UTOPIA_CORE} PUBLIC ${UTOPIA_CONFIG})
 target_link_libraries(${UTOPIA_CORE} PUBLIC fmt::fmt)
 target_link_libraries(${UTOPIA_CORE} PUBLIC eigen)
 target_link_libraries(${UTOPIA_CORE} PUBLIC boost)
 target_link_libraries(${UTOPIA_CORE} PUBLIC nlohmann_json::nlohmann_json)
+target_link_libraries(${UTOPIA_CORE} PUBLIC icu)
+

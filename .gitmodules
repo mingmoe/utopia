@@ -34,3 +34,27 @@
 [submodule "library/doctest"]
 	path = library/doctest
 	url = https://github.com/doctest/doctest
+[submodule "assert/noto-emoji"]
+	path = assert/noto-emoji
+	url = https://github.com/googlefonts/noto-emoji
+[submodule "assert/noto-fonts"]
+	path = assert/noto-fonts
+	url = https://github.com/notofonts/noto-fonts
+[submodule "assert/noto-cjk"]
+	path = assert/noto-cjk
+	url = https://github.com/googlefonts/noto-cjk
+[submodule "library/flac"]
+	path = library/flac
+	url = https://github.com/xiph/flac
+[submodule "library/libjpeg-turbo"]
+	path = library/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+[submodule "library/zstd"]
+	path = library/zstd
+	url = https://github.com/facebook/zstd
+[submodule "library/ogg"]
+	path = library/ogg
+	url = https://gitlab.xiph.org/xiph/ogg
+[submodule "library/vorbis"]
+	path = library/vorbis
+	url = https://gitlab.xiph.org/xiph/vorbis

@@ -16,13 +16,13 @@ function build-android-library($build_args){
     if($null -ne $env:NDK){
         $ndk_path = $env:NDK
     }
-    if($null -ne $NDK_PATH){
-        $ndk_path = $NDK_PATH
+    if($null -ne $global:NDK_PATH){
+        $ndk_path = $$global:NDK_PATH
     }
 
     if($null -eq $ndk_path){
         Write-Error 
-        "unknown ndk path. Set up NDK_ROOT or NDK environment. Or set NDK_PATH powershell environment"
+        "unknown ndk path. Set up `$env:NDK_ROOT or `$env:NDK or `$global:NDK_PATH variable"
         return
     }
 

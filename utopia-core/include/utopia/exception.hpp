@@ -34,6 +34,10 @@ namespace utopia::core {
 
         std::exception_ptr            inner_exception{};
 
+        Exception(std::exception_ptr exception) :
+            stack(boost::stacktrace::stacktrace()), inner_exception(exception) {
+        }
+
       public:
 
         /**
@@ -43,8 +47,7 @@ namespace utopia::core {
         */
         Exception(std::string_view   msg,
                   std::exception_ptr exception = std::exception_ptr{}) :
-            inner_exception(exception),
-            stack(boost::stacktrace::stacktrace()) {
+            Exception(exception) {
             std::stringstream ss{};
 
             //::" << Name.value << "
@@ -80,10 +83,10 @@ namespace utopia::core {
          * @param exception 引发此异常的异常。可为空。
         */
         UniversalException(std::string_view   view,
-                           std::exception_ptr inner = std::exception_ptr{})  :
-            Exception::inner_exception(exception),
-            Exception::stack(boost::stacktrace::stacktrace()) {
+                           std::exception_ptr inner = std::exception_ptr{}) :
+            Exception(inner) {
 
+            this->inner_exception = inner;
             std::stringstream ss{};
 
             ss << "===> Exception::" << Name.value << " <===\n"
@@ -109,7 +112,7 @@ namespace utopia::core {
                     ss << std::string_view{ e };
                 }
                 catch(...) {
-                    return "unknown inner exception";
+                    ss << "unknown inner exception";
                 }
             }
 
@@ -119,12 +122,13 @@ namespace utopia::core {
         }
     };
 
+    using RuntimeException     = UniversalException<"RuntimeException">;
+
     using IOException          = UniversalException<"IOException">;
 
     using NullPointerException = UniversalException<"NullPointerException">;
 
     using IllegalParameterException =
         UniversalException<"IllegalParameterException">;
-
 
 }   // namespace utopia::core

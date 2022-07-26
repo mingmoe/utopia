@@ -18,59 +18,65 @@
 # 同时设置一个特殊的变量供ANDROID使用: U_ANDROID_MODE
 # 同时设置以下变量:
 # U_PUBLIC_OS: Windows|Linux|Apple
-# U_PUBLIC_COMPILER: Msvc|Gcc|Clang
+# U_PUBLIC_COMPILER: MSVC|GCC|CLANG
 # U_COMPILE_MODE: Debug|Release
 # U_SYSROOT_NAME: 用于标识需要使用的sysroot
 # UTOPIA_SYSROOT: 第三方库使用的sysroot
 
 # 检查编译器
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "12.0.0")
-		message(WARNING "gcc version may be too old")
-		message(STATUS "official-build use gcc 11 or higher")
+    set(U__TEMPL_CXX_V "12.0.0")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${U__TEMPL_CXX_V}")
+		message(WARNING "gcc version may be too old"
+                "official-build use gcc ${U__TEMPL_CXX_V} or higher")
 	endif()
 
-    set(U_USE_GCC "true")
-    set(U_PUBLIC_COMPILER "Gcc")
-    message(STATUS "compile by gcc")
+    set(U_USE_GCC "True")
+    set(U_PUBLIC_COMPILER "GCC")
+    message(STATUS "compile by gcc ${CMAKE_CXX_COMPILER_VERSION}")
+    unset(U__TEMPL_CXX_V)
 
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0.0")
-		message(WARNING "clang version may be too old")
-		message(STATUS "official-build use clang 12 or higher")
+    set(U__TEMPL_CXX_V "14.0.0")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${U__TEMPL_CXX_V}")
+		message(WARNING "clang version may be too old"
+            "official-build use clang ${U__TEMPL_CXX_V} or higher")
 	endif()
 
-    set(U_USE_CLANG "true")
-    set(U_PUBLIC_COMPILER "Clang")
-    message(STATUS "compile by clang")
+    set(U_USE_CLANG "True")
+    set(U_PUBLIC_COMPILER "CLANG")
+    message(STATUS "compile by clang ${CMAKE_CXX_COMPILER_VERSION}")
+    unset(U__TEMPL_CXX_V)
 
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.30.0")
-		message(WARNING "msvc version may be too old")
-		message(STATUS "official-build use msvc 19.30 or higher")
+    set(U__TEMPL_CXX_V "19.30.0")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${U__TEMPL_CXX_V}")
+		message(WARNING "msvc version may be too old"
+        "official-build use msvc ${U__TEMPL_CXX_V} or higher")
 	endif()
     
-    set(U_USE_MSVC "true")
-    set(U_PUBLIC_COMPILER "Msvc")
-    message(STATUS "compile by msvc")
+    set(U_USE_MSVC "True")
+    set(U_PUBLIC_COMPILER "MSVC")
+    message(STATUS "compile by msvc ${CMAKE_CXX_COMPILER_VERSION}")
+    unset(U__TEMPL_CXX_V)
 
 
 else()
 	message(
 		FATAL_ERROR 
-		"unknow c++ compiler:${CMAKE_CXX_COMPILER_ID}"
+		"no supported c++ compiler:${CMAKE_CXX_COMPILER_ID}"
 	)
 endif()
 
 
 # 检查编译模式
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(U_DEBUG_MODE "true")
+    set(U_DEBUG_MODE "True")
 
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(U_RELEASE_MODE "true")
+    set(U_RELEASE_MODE "True")
 
 else()
     message(FATAL_ERROR "unknown build type:${CMAKE_BUILD_TYPE} only support Debug or Release")
@@ -85,25 +91,26 @@ message(STATUS "build type:${CMAKE_BUILD_TYPE}")
 if(UNIX AND NOT APPLE)
     message(STATUS "compile under linux")
     set(U_PUBLIC_OS "Linux")
-    set(U_UNDER_LINUX "true")
+    set(U_UNDER_LINUX "True")
 
 elseif(WIN32)
     message(STATUS "compile under windows")
     set(U_PUBLIC_OS "Windows")
-    set(U_UNDER_WINDOWS "true")
+    set(U_UNDER_WINDOWS "True")
 
 else()
     message(STATUS "compile under apple")
     set(U_PUBLIC_OS "Apple")
-    set(U_UNDER_APPLE "true")
+    set(U_UNDER_APPLE "True")
 endif()
 
 # 检查安卓设置
 if(ANDROID)
     message(STATUS "compile for android")
-    set(U_ANDROID_MODE "true")
+    set(U_ANDROID_MODE "True")
 endif()
 
+#=========================================
 # 设置sysroot_name
 if(U_ANDROID_MODE)
     set(U_SYSROOT_NAME "android-arm64")
@@ -133,4 +140,15 @@ if(NOT DEFINED UTOPIA_SYSROOT)
     message(STATUS "using ${UTOPIA_SYSROOT} as SYSROOT")
 endif()
 
+# 设置系统find package的路径
+FILE(GLOB children_root LIST_DIRECTORIES True  "${UTOPIA_SYSROOT}/*")
+
 set(CMAKE_PREFIX_PATH "${UTOPIA_SYSROOT}")
+
+foreach(X IN LISTS children_root)
+    if(IS_DIRECTORY ${X})
+        list(APPEND CMAKE_PREFIX_PATH ${X})
+    endif()
+endforeach()
+
+message(STATUS "library roots: ${CMAKE_PREFIX_PATH}")

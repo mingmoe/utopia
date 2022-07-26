@@ -1,0 +1,37 @@
+{
+    "name": "utopia",
+    "version": "1.0.0",
+    "description": "The utopia game",
+    "devDependencies": {
+      "@commitlint/cli": "^13.2.1",
+      "@commitlint/config-conventional": "^13.2.0",
+      "@types/node": "^18.0.0",
+      "@types/semantic-release": "^17.2.3",
+      "cz-conventional-changelog": "^3.3.0",
+      "semantic-release": "^19.0.3"
+    },
+    "scripts": {
+      "lint-last-commit": "npx commitlint --from HEAD~1 --verbose",
+      "commit": "git status && git cz",
+      "try-release": "npx tsc && node ./output-package/release.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/mingmoe/utopia.git"
+    },
+    "author": "MingMoe (sudo.free@qq.com or me@kawayi.moe)",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/mingmoe/utopia/issues"
+    },
+    "homepage": "https://github.com/mingmoe/utopia#readme",
+    "private": true,
+    "//NOTE//": "配置commitizen(git cz)",
+    "config": {
+      "//NOTE//": "使用标准commit format ; commit-lint程序的配置见commitlint.config.js",
+      "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
+      }
+    }
+  }
+  

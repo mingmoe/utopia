@@ -42,3 +42,8 @@ target_compile_definitions("icu" INTERFACE "U_HIDE_DEPRECATED_API=1")
 target_include_directories("icu" SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/icu/icu4c/source/common/")
 target_include_directories("icu" SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/icu/icu4c/source/i18n/")
 target_include_directories("icu" SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/icu/icu4c/source/stubdata/")
+
+target_compile_options(icu PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W1>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-W>
+)

@@ -4,48 +4,26 @@
 # Copyright (c) 2020-2022 moe-org All rights reserved.
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-if(U_DEBUG_MODE)
-    set(U_LIBRARY_DEBUG_END "d")
-else()
-    set(U_LIBRARY_DEBUG_END "")
-endif()
-
-if(U_UNDER_WINDOWS)
-    set(U_LIBRARY_FILE_EXT ".lib")
-elseif(U_UNDER_LINUX)
-    set(U_LIBRARY_FILE_EXT ".a")
-else()
-    message(FATAL_ERROR "unknown platform")
-endif()
-
-set(U_LIBRARY_END "${U_LIBRARY_DEBUG_END}${U_LIBRARY_FILE_EXT}")
-unset(U_LIBRARY_DEBUG_END)
-unset(U_LIBRARY_FILE_EXT)
+include("${UTOPIA_SYSROOT}/library-info.cmake")
 
 #===== zlib =====
+message(STATUS "using ${zlib_LIBRARY}")
+
 add_library(zlib STATIC IMPORTED)
 
-set(ZLIB_INCLUDE_DIR "${UTOPIA_SYSROOT}/zlib/include")
-set(ZLIB_LIBRARY "${UTOPIA_SYSROOT}/zlib/lib/zlibstatic${U_LIBRARY_END}")
-
-message(STATUS "using ${ZLIB_LIBRARY}")
-
 set_property(TARGET zlib PROPERTY
-             IMPORTED_LOCATION "${ZLIB_LIBRARY}")
-target_include_directories(zlib INTERFACE "${ZLIB_INCLUDE_DIR}")
+             IMPORTED_LOCATION "${zlib_LIBRARY}")
+target_include_directories(zlib INTERFACE "${zlib_INCLUDE_DIR}")
 #================
 
 #===== libpng =====
+message(STATUS "using ${libpng_LIBRARY}")
+
 add_library(libpng STATIC IMPORTED)
 
-set(PNG_PNG_INCLUDE_DIR "${UTOPIA_SYSROOT}/libpng/include")
-set(PNG_LIBRARY "${UTOPIA_SYSROOT}/libpng/lib/libpng16_static${U_LIBRARY_END}")
-
-message(STATUS "using ${PNG_LIBRARY}")
-
 set_property(TARGET libpng PROPERTY
-             IMPORTED_LOCATION "${PNG_LIBRARY}")
-target_include_directories(libpng INTERFACE "${PNG_PNG_INCLUDE_DIR}")
+             IMPORTED_LOCATION "${libpng_LIBRARY}")
+target_include_directories(libpng INTERFACE "${libpng_INCLUDE_DIR}")
 #==================
 
 #===== harfbuzz =====
@@ -57,6 +35,15 @@ set_property(TARGET harfbuzz PROPERTY
              IMPORTED_LOCATION "${U_HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a")
 target_include_directories(harfbuzz INTERFACE "${U_HARFBUZZ_INSTALL_DIR}/include")
 #====================
+
+#===== FLAC =====
+message(STATUS "using ${flac_LIBRARY}")
+
+add_library(flac INTERFACE)
+target_include_directories(flac INTERFACE "${flac_INCLUDE_DIR}")
+target_link_libraries(flac INTERFACE "${flac_LIBRARY}")
+
+#================
 
 #===== boost =====
 add_library("boost" INTERFACE)
@@ -72,10 +59,8 @@ target_include_directories(boost SYSTEM INTERFACE "${UTOPIA_LIBRARY}/boost/libs/
 target_include_directories(boost SYSTEM INTERFACE "${UTOPIA_LIBRARY}/boost/libs/throw_exception/include")
 target_include_directories(boost SYSTEM INTERFACE "${UTOPIA_LIBRARY}/boost/libs/stacktrace/include")
 
-if(U_UNDER_LINUX OR U_UNDER_APPLE)
+if(U_UNDER_LINUX OR U_UNDER_APPLE OR U_ANDROID_MODE)
     message(STATUS "link with lib-${CMAKE_DL_LIBS} for stacktrace")
     target_link_directories(boost INTERFACE ${CMAKE_DL_LIBS})
 endif()
 #=================
-
-unset(U_LIBRARY_END)
