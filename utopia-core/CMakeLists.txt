@@ -9,6 +9,7 @@ add_library(${UTOPIA_CORE} STATIC
     "include/utopia/iostream.hpp"
     "include/utopia/template.hpp"
     "include/utopia/exception.hpp"
+    "include/utopia/source_location.hpp"
     "src/iostream.cpp")
 
 target_include_directories(${UTOPIA_CORE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
