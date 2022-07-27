@@ -58,7 +58,7 @@ namespace utopia::core {
             debug_break();
         }
 
-        virtual char const *what() const override {
+        virtual char const *what() const noexcept override {
             return msg.c_str();
         }
 

@@ -33,11 +33,11 @@ namespace utopia::core {
     #ifdef _MSC_VER
         __debugbreak();
     #elif __has_builtin(__builtin_debugtrap)
-        __builtin_debugtrap
+        __builtin_debugtrap();
     #elif defined(SIGTRAP)
-        raise(SIGTRAP)
+        raise(SIGTRAP);
     #else
-        unreachable("no debug break impl");
+        #error no debug break impl
     #endif
 #endif
         return;
