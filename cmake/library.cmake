@@ -15,8 +15,8 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(JSON_Install OFF CACHE INTERNAL "")
 u_add_define(
     "JSON_DIAGNOSTICS=1"
-    "JSON_HAS_CPP_20"
-    "JSON_HAS_FILESYSTEM"
+    "JSON_HAS_CPP_20=1"
+    "JSON_HAS_FILESYSTEM=1"
     "JSON_USE_IMPLICIT_CONVERSIONS=1")
 add_subdirectory("${UTOPIA_LIBRARY}/json" EXCLUDE_FROM_ALL)
 #=========================

@@ -80,11 +80,7 @@ function(u_add_define)
 endfunction()
 
 # 地址消毒
-if(U_DEBUG_MODE)
-    option(U_OPT_ASAN "enable Address Sanitize? default enable in debug" ON)
-elseif(U_RELEASE_MODE)
-    option(U_OPT_ASAN "enable Address Sanitize? default enable in debug" OFF)
-endif()
+option(U_OPT_ASAN "enable Address Sanitize? default enable in debug" OFF)
 
 if(U_OPT_ASAN)
     if(MSVC)

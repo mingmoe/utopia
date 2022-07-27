@@ -94,6 +94,7 @@ jobs:
       # 编译
       - name: Build
         run: |
+          git submodule update --init --recursive --depth=1
           sudo apt -y install ninja-build
           pip install meson
           python ./library/build.py --${mode}
@@ -128,6 +129,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
+          git submodule update --init --recursive --depth=1
           $env:CC="cl.exe"
           $env:CXX="cl.exe"
           pip install meson
