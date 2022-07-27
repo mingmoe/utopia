@@ -26,6 +26,7 @@ u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/library.cmake")
 u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake")
 
 u_open_clang_tidy()
+u_enable_strict_wanrnings()
 u_add_subdirectory_at_root ("utopia-core")
 u_add_subdirectory_at_root ("utopia-client")
 u_add_subdirectory_at_root ("utopia-server")

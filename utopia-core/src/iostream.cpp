@@ -11,24 +11,35 @@
 
 #include "utopia/iostream.hpp"
 
+#include "utopia/exception.hpp"
 #include <cstdio>
 #include <mutex>
 
 namespace {
-    std::mutex stdout_locker{};
 
-    std::mutex stderr_locker{};
+    inline void
+        write_to(std::string_view str, std::mutex &lock, decltype(stdout) s) {
+        std::lock_guard locker{ lock };
+
+        auto            ret = fwrite(str.data(), sizeof(char), str.size(), s);
+
+        if(ret != str.size()) {
+            throw utopia::core::IOException{
+                "failed to write to stdout or stderr"
+            };
+        }
+    }
+
 }   // namespace
 
-
 void utopia::core::write_stdout(std::string_view str) {
-    std::lock_guard locker{ stdout_locker };
+    static std::mutex stdout_locker{};
 
-    fwrite(str.data(), sizeof(char), str.size(), stdout);
+    write_to(str, stdout_locker, stdout);
 }
 
 void utopia::core::write_stderr(std::string_view str) {
-    std::lock_guard locker{ stderr_locker };
+    static std::mutex stderr_locker{};
 
-    fwrite(str.data(), sizeof(char), str.size(), stderr);
+    write_to(str, stderr_locker, stderr);
 }

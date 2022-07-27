@@ -59,7 +59,7 @@ jobs:
       # 检查
       - name: Validate
         run: |
-          python ./check-format.py --style file -r ./utopia-client ./utopia-core ./utopia-server
+          npm run check-style
 
   #================================================================
   # 构建并进行单元测试

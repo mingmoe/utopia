@@ -11,8 +11,8 @@
 
 #pragma once
 
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 
 namespace utopia::core {
 

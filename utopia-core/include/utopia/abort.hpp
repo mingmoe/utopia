@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <boost/stacktrace/stacktrace.hpp>
+#include <boost/stacktrace.hpp>
 #include <exception>
 #include <source_location>
 #include <sstream>

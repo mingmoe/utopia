@@ -5,10 +5,15 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 # clang tidy设置
-option(U_OPT_USE_CLANG_TIDY "using clang-tidy?" OFF)
+option(U_OPT_USE_CLANG_TIDY "using clang-tidy?")
 option(U_OPT_CLANG_TIDY_PATH "clang-tidy path?" "clang-tidy")
 
+if(NOT U_OPT_CLANG_TIDY_PATH)
+    set(U_OPT_CLANG_TIDY_PATH "clang-tidy")
+endif()
+
 if(U_OPT_USE_CLANG_TIDY)
+    message(STATIS "use clang-tidy:${U_OPT_CLANG_TIDY_PATH}")
     function(u_open_clang_tidy)
         set(CMAKE_CXX_CLANG_TIDY 
             ${U_OPT_CLANG_TIDY_PATH}
@@ -30,7 +35,7 @@ u_close_clang_tidy()
 # 设置编译选项
 if(MSVC) # for msvc
     set(U__TEMP__FLAGS_ 
-    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W4 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets")
+    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W1 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets")
     set(U__TEMP__FLAGS_DEBUG "/Od /MDd")
     set(U__TEMP__FLAGS_RELEASE "/O2 /MD /DNDEBUG")
 
@@ -48,7 +53,7 @@ if(MSVC) # for msvc
 
 else() # for gcc\clang
 
-    set(U__TEMP__FLAGS_ "-Wall -Wextra -g3")
+    set(U__TEMP__FLAGS_ "-W -g3")
 
     set(U__TEMP__FLAGS_DEBUG "-O0 -ggdb")
     set(U__TEMP__FLAGS_RELEASE "-O3 -DNDEBUG")
@@ -67,16 +72,31 @@ else() # for gcc\clang
     unset(U__TEMP__FLAGS_RELEASE)
 endif()
 
+# helper function
 function(u_add_define)
     foreach(arg IN LISTS ARGN)
         if(MSVC)
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D${arg}")
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D${arg}")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D${arg}" PARENT_SCOPE)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D${arg}" PARENT_SCOPE)
         else()
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D${arg}")
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${arg}")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D${arg}" PARENT_SCOPE)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${arg}" PARENT_SCOPE)
         endif()
     endforeach()
+endfunction()
+
+function(u_enable_strict_wanrnings)
+    if(MSVC)
+        string(REPLACE "/W1" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REPLACE "/W1" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" PARENT_SCOPE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
+    else()
+        string(REPLACE "-W" "-Wall -Wextra " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REPLACE "-W" "-Wall -Wextra " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" PARENT_SCOPE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
+    endif()
 endfunction()
 
 # 地址消毒

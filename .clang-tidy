@@ -15,7 +15,7 @@ Checks: >-
 
 WarningsAsErrors: ''
 
-HeaderFilterRegex: '^(<)|(")|()utopia/'
+HeaderFilterRegex: '^"utopia/.*'
 
 AnalyzeTemporaryDtors: false
 

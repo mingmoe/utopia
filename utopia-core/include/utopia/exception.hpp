@@ -82,7 +82,7 @@ namespace utopia::core {
          * @param msg 异常信息
          * @param exception 引发此异常的异常。可为空。
         */
-        UniversalException(std::string_view   view,
+        UniversalException(std::string_view   msg,
                            std::exception_ptr inner = std::exception_ptr{}) :
             Exception(inner) {
 
