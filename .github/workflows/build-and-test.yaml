@@ -134,7 +134,7 @@ jobs:
           python ./library/build.py "--$env:mode"
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=$env:mode -G "Visual Studio 17 2022"
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE="$env:mode" -G "Visual Studio 17 2022"
           cmake --build . -j2
 
   #================================================================

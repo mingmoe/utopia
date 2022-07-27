@@ -64,17 +64,10 @@ target_include_directories(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui")
 target_include_directories(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends")
 
 # backend
-if(U_ANDROID_MODE)
-    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_android.cpp")
-elseif(U_UNDER_WINDOWS)
-    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_win32.cpp")
-elseif(U_UNDER_LINUX)
-    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_vulkan.cpp")
-elseif(U_UNDER_APPLE)
-    target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_vulkan.cpp")
-else()
-    message(FATAL_ERROR "unknown imgui backends for your platform!")
-endif()
+target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_sdl.cpp")
+target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_sdlrenderer.cpp")
+
+target_link_libraries(imgui PUBLIC SDL2::SDL2-static)
 
 # close all warnings
 target_compile_options(imgui PRIVATE
