@@ -17,11 +17,12 @@
 
 namespace {
 
-    inline void
-        write_to(std::string_view str, std::mutex &lock, decltype(stdout) s) {
+    inline void write_to(std::string_view str,
+                         std::mutex      &lock,
+                         decltype(stdout) stream) {
         std::lock_guard locker{ lock };
 
-        auto            ret = fwrite(str.data(), sizeof(char), str.size(), s);
+        auto ret = fwrite(str.data(), sizeof(char), str.size(), stream);
 
         if(ret != str.size()) {
             throw utopia::core::IOException{

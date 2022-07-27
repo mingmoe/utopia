@@ -6,13 +6,20 @@
 
 #include <cstdint>
 
+// clang has no __builtin_COLUMN
+#if __has_builtin(__builtin_COLUMN)
+    #define UTOPIA_BUILT_IN_COLUMN __builtin_COLUMN()
+#else
+    #define UTOPIA_BUILT_IN_COLUMN 0
+#endif
+
 namespace utopia::core {
     struct source_location {
         // ------------------- because clang not supported
         // ------------------↓ so change this from consteval to constexpr
         [[nodiscard]] static constexpr source_location current(
             const uint_least32_t _Line_     = __builtin_LINE(),
-            const uint_least32_t _Column_   = __builtin_COLUMN(),
+            const uint_least32_t _Column_   = UTOPIA_BUILT_IN_COLUMN,
             const char *const    _File_     = __builtin_FILE(),
             const char *const    _Function_ = __builtin_FUNCTION()) noexcept {
             source_location _Result;
