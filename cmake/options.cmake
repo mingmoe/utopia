@@ -53,7 +53,7 @@ if(MSVC) # for msvc
 
 else() # for gcc\clang
 
-    set(U__TEMP__FLAGS_ "-W -g3")
+    set(U__TEMP__FLAGS_ "-W -g3 -fno-strict-aliasing")
 
     set(U__TEMP__FLAGS_DEBUG "-O0 -ggdb")
     set(U__TEMP__FLAGS_RELEASE "-O3 -DNDEBUG")

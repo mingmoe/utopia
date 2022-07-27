@@ -31,6 +31,38 @@ u_add_subdirectory_at_root ("utopia-core")
 u_add_subdirectory_at_root ("utopia-client")
 u_add_subdirectory_at_root ("utopia-server")
 
+# another 
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/pvs-studio-cmake-module/PVS-Studio.cmake")
+
+if(MSVC)
+    set(EXT_FLAGS CXX_FLAGS "/utf-8")
+endif()
+
+pvs_studio_add_target(
+    TARGET core.analyze 
+    OUTPUT FORMAT json
+    ANALYZE "${UTOPIA_CORE}"
+    LOG "pvs.core.log"
+    ARGS -e "${UTOPIA_LIBRARY}/*"
+    ${EXT_FLAGS}
+)
+pvs_studio_add_target(
+    TARGET client.analyze 
+    OUTPUT FORMAT json
+    ANALYZE "${UTOPIA_CLIENT}"
+    LOG "pvs.client.log"
+    ARGS -e "${UTOPIA_LIBRARY}/*"
+    ${EXT_FLAGS}
+)
+pvs_studio_add_target(
+    TARGET server.analyze 
+    OUTPUT FORMAT json
+    ANALYZE "${UTOPIA_SERVER}"
+    LOG "pvs.server.log"
+    ARGS -e "${UTOPIA_LIBRARY}/*"
+    ${EXT_FLAGS}
+)
+
 #==============================================
 # 添加cmake自定义项目
 # 这主要用于IDE管理cmake文件

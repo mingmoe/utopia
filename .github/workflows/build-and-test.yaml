@@ -91,6 +91,14 @@ jobs:
         with:
           submodules: true
 
+      - name: Install tools
+        run: |
+          wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt | sudo apt-key add -
+          sudo wget -O /etc/apt/sources.list.d/viva64.list https://files.pvs-studio.com/etc/viva64.list
+          sudo apt update
+          sudo apt install pvs-studio
+          pvs-studio-analyzer credentials "PVS-Studio Free" FREE-FREE-FREE-FREE
+
       # 编译
       - name: Build
         run: |
@@ -102,6 +110,9 @@ jobs:
           cd build
           cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
           cmake --build . -j2
+          cmake --build . -j2 core.analyze || true
+          cmake --build . -j2 client.analyze || true
+          cmake --build . -j2 server.analyze || true
 
   Build-And-Test-On-Windows:
     needs: [ Check-Code-Format ]
@@ -158,9 +169,20 @@ jobs:
 
       # 配置git
       - name: Config git
+        env:
+          FIRST_KEY: ${{ secrets.FIRST_KEY }}
+          SECOND_KEY: ${{ secrets.SECOND_KEY }}
+          MAGIC_CODE_1: ${{ secrets.MAGIC_CODE_1 }}
+          MAGIC_CODE_2: ${{ secrets.MAGIC_CODE_2 }}
+          MAGIC_R: ${{ secrets.MAGIC_R }}
+          MAGIC_KEY: ${{ secrets.MAGIC_KEY }}
         run: |
           git config --global user.name   mingmoe
           git config --global user.email  me@kawayi.moe
+          ${FIRST_KEY} | gpg --batch --import ${MAGIC_CODE_1}
+          ${SECOND_KEY} | gpg --batch --import ${MAGIC_CODE_2}
+          gpg -a --encrypt -r ${MAGIC_R} --trust-model always
+          git config --global user.signingkey ${MAGIC_KEY}
 
       # 设置tag
       - name: Set tag
@@ -169,8 +191,11 @@ jobs:
           build_number: ${{ github.run_number }}
 
         run: |
-          cmake -DU_OPT_GET_VERSION_EXIT=ON -DU_OPT_BUILD_NUMBER=${build_number}
+          cmake -DU_OPT_GET_VERSION_EXIT=ON -DU_OPT_BUILD_NUMBER=${build_number} || true
           tag_version=$(cat version.txt)
           echo TAG:${tag_version}
+          export GPG_TTY=$(tty)
           git tag ${tag_version}
+          git tag -s ${tag_version}
+          git tag -v ${tag_version}
           git push --tags
