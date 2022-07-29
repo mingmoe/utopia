@@ -23,6 +23,23 @@ on:
 
 jobs:
   #================================================================
+  # 检查submodule hash
+  #================================================================
+  Check-Submodule-Hash:
+    runs-on: ubuntu-22.04
+
+    steps:
+      # 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # 检查提交
+      # 检查16次提交
+      - name: Check submodule
+        run: |
+          python ./hash_submodule.py --check
+
+  #================================================================
   # 检查提交信息
   #================================================================
   Check-Commit-Message:
@@ -46,7 +63,7 @@ jobs:
           npx commitlint --from HEAD~15 --to HEAD --verbose
 
   #================================================================
-  # 检查项目
+  # 检查代码格式
   #================================================================
   Check-Code-Format:
     runs-on: ubuntu-22.04
@@ -61,11 +78,18 @@ jobs:
         run: |
           npm run check-style
 
+  Check:
+    needs: [Check-Code-Format,Check-Submodule-Hash]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Done
+        run: \#
+
   #================================================================
   # 构建并进行单元测试
   #================================================================
   Build-And-Test-On-Linux:
-    needs: [ Check-Code-Format ]
+    needs: [ Check ]
 
     strategy:
       matrix:
@@ -88,8 +112,13 @@ jobs:
       # 检出代码
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      # 检出缓存
+      - name: Checkout Cache
+        uses: actions/cache@v3
         with:
-          submodules: true
+          path: ~/assert/**
+          key: ${{ hashFiles('submodule-lock.txt') }}
 
       - name: Install tools
         run: |
@@ -102,20 +131,20 @@ jobs:
       # 编译
       - name: Build
         run: |
-          git submodule update --init --recursive --depth=1
+          git submodule update --init --recursive --depth=1 library/**
           sudo apt -y install ninja-build
           pip install meson
           python ./library/build.py --${mode}
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -DU_OPT_PVS_ENABLED=ON -G Ninja
           cmake --build . -j2
           cmake --build . -j2 core.analyze || true
           cmake --build . -j2 client.analyze || true
           cmake --build . -j2 server.analyze || true
 
   Build-And-Test-On-Windows:
-    needs: [ Check-Code-Format ]
+    needs: [ Check ]
 
     strategy:
       matrix:
@@ -140,7 +169,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          git submodule update --init --recursive --depth=1
+          git submodule update --init --recursive --depth=1 library/**
           $env:CC="cl.exe"
           $env:CXX="cl.exe"
           pip install meson
@@ -198,4 +227,4 @@ jobs:
           git tag ${tag_version}
           git tag -s ${tag_version}
           git tag -v ${tag_version}
-          git push --tags
+          #git push --tags
