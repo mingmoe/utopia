@@ -26,25 +26,14 @@ jobs:
         
       # 配置git
       - name: Config git
-        env:
-          FIRST_KEY: ${{ secrets.FIRST_KEY }}
-          SECOND_KEY: ${{ secrets.SECOND_KEY }}
-          MAGIC_CODE_1: ${{ secrets.MAGIC_CODE_1 }}
-          MAGIC_CODE_2: ${{ secrets.MAGIC_CODE_2 }}
-          MAGIC_R: ${{ secrets.MAGIC_R }}
-          MAGIC_KEY: ${{ secrets.MAGIC_KEY }}
         run: |
           git config --global user.name   mingmoe
           git config --global user.email  me@kawayi.moe
-          ${FIRST_KEY} | gpg --batch --import ${MAGIC_CODE_1}
-          ${SECOND_KEY} | gpg --batch --import ${MAGIC_CODE_2}
-          gpg -a --encrypt -r ${MAGIC_R} --trust-model always
-          git config --global user.signingkey ${MAGIC_KEY}
 
       # 提交修改
       - name: Push to github
         run: |
           export GPG_TTY=$(tty)
           git add README.md
-          git commit -s -m "chore(README): 更新勋章"
+          git commit -m "chore(README): 更新勋章"
           git push

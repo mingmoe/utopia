@@ -23,23 +23,6 @@ on:
 
 jobs:
   #================================================================
-  # 检查submodule hash
-  #================================================================
-  Check-Submodule-Hash:
-    runs-on: ubuntu-22.04
-
-    steps:
-      # 检出代码
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      # 检查提交
-      # 检查16次提交
-      - name: Check submodule
-        run: |
-          python ./hash_submodule.py --check
-
-  #================================================================
   # 检查提交信息
   #================================================================
   Check-Commit-Message:
@@ -79,7 +62,7 @@ jobs:
           npm run check-style
 
   Check:
-    needs: [Check-Code-Format,Check-Submodule-Hash]
+    needs: [Check-Code-Format]
     runs-on: ubuntu-22.04
     steps:
       - name: Done
@@ -198,20 +181,9 @@ jobs:
 
       # 配置git
       - name: Config git
-        env:
-          FIRST_KEY: ${{ secrets.FIRST_KEY }}
-          SECOND_KEY: ${{ secrets.SECOND_KEY }}
-          MAGIC_CODE_1: ${{ secrets.MAGIC_CODE_1 }}
-          MAGIC_CODE_2: ${{ secrets.MAGIC_CODE_2 }}
-          MAGIC_R: ${{ secrets.MAGIC_R }}
-          MAGIC_KEY: ${{ secrets.MAGIC_KEY }}
         run: |
           git config --global user.name   mingmoe
           git config --global user.email  me@kawayi.moe
-          ${FIRST_KEY} | gpg --batch --import ${MAGIC_CODE_1}
-          ${SECOND_KEY} | gpg --batch --import ${MAGIC_CODE_2}
-          gpg -a --encrypt -r ${MAGIC_R} --trust-model always
-          git config --global user.signingkey ${MAGIC_KEY}
 
       # 设置tag
       - name: Set tag
@@ -225,6 +197,4 @@ jobs:
           echo TAG:${tag_version}
           export GPG_TTY=$(tty)
           git tag ${tag_version}
-          git tag -s ${tag_version}
-          git tag -v ${tag_version}
-          #git push --tags
+          git push --tags
