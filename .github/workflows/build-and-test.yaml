@@ -107,7 +107,7 @@ jobs:
       # 编译
       - name: Build
         run: |
-          git submodule update --init --recursive --depth=1 library/**
+          git submodule update --init --recursive --depth=1 library/** cmake/**
           sudo apt -y install ninja-build
           pip install meson
           python ./library/build.py --${mode}
@@ -135,8 +135,6 @@ jobs:
       # 检出代码
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          submodules: true
 
       # setup msvc
       - uses: ilammy/msvc-dev-cmd@v1
@@ -145,7 +143,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          git submodule update --init --recursive --depth=1 library/**
+          git submodule update --init --recursive --depth=1 library/** cmake/**
           $env:CC="cl.exe"
           $env:CXX="cl.exe"
           pip install meson
