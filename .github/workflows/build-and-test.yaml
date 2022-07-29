@@ -96,13 +96,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 检出缓存
-      - name: Checkout Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/assert/**
-          key: ${{ hashFiles('submodule-lock.txt') }}
-
       - name: Install tools
         run: |
           wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt | sudo apt-key add -
