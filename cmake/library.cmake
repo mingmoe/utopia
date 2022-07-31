@@ -10,6 +10,11 @@ set(SKIP_INSTALL_ALL ON)
 add_subdirectory("${UTOPIA_LIBRARY}/fmt" EXCLUDE_FROM_ALL)
 #==================
 
+#===== asio =====
+add_library("asio" INTERFACE)
+target_include_directories(asio SYSTEM INTERFACE "${UTOPIA_LIBRARY}/asio/asio/include")
+#================
+
 #===== nlohmann/json =====
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(JSON_Install OFF CACHE INTERNAL "")
@@ -79,6 +84,7 @@ target_compile_options(imgui PRIVATE
 #===== doctest ======
 enable_testing()
 add_subdirectory("${UTOPIA_LIBRARY}/doctest" EXCLUDE_FROM_ALL)
+include("${UTOPIA_LIBRARY}/doctest/scripts/cmake/doctest.cmake")
 #====================
 
 u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/import-library.cmake")

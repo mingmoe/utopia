@@ -14,7 +14,7 @@
       "lint-last-commit": "npx commitlint --from HEAD~1 --verbose",
       "commit": "git status && git cz",
       "try-release": "npx tsc && node ./output-package/release.js",
-      "check-style": "python ./check-format.py --style file -r ./utopia-client ./utopia-core ./utopia-server"
+      "check-style": "python ./check-all.py"
     },
     "repository": {
       "type": "git",

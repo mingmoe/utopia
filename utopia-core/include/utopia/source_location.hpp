@@ -1,8 +1,14 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-// copy from <source_location> in Windows
-
-// with little modify
+//===----------------- source_location.hpp ----------------===//
+//
+// this file is under the MIT License
+// See https://opensource.org/licenses/MIT for license information.
+// Copyright(c) 2020-2022 moe-org All rights reserved.
+//
+//===------------------------------------------------------===//
+/// \file
+/// copy from <source_location> in Windows
+/// with little modify for clang
+//===------------------------------------------------------===//
 // Copyright (c) Microsoft Corporation.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 

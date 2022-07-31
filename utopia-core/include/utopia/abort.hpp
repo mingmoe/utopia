@@ -1,12 +1,10 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-//===---------------------- abort.hpp ----------------------===//
+//===---------------------- abort.hpp ---------------------===//
 //
 // this file is under the MIT License
 // See https://opensource.org/licenses/MIT for license information.
 // Copyright(c) 2020-2022 moe-org All rights reserved.
 //
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 /// \file
 /// 这个文件负责处理程序的中断，信号，断点等。
 //===-------------------------------------------------------===//
@@ -31,8 +29,8 @@ namespace utopia::core {
      * @brief debug断点
     */
     inline void debug_break() {
-#ifndef NDEBUG
-    #ifdef _MSC_VER
+#if !defined(NDEBUG)
+    #if defined(_MSC_VER)
         __debugbreak();
     #elif __has_builtin(__builtin_debugtrap)
         __builtin_debugtrap();

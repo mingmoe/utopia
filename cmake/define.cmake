@@ -32,4 +32,6 @@ set(UTOPIA_CORE     "utopia-core")
 set(UTOPIA_CLIENT   "utopia-client")
 set(UTOPIA_SERVER   "utopia-server")
 
+set(UTOPIA_CORE_TEST "${UTOPIA_CORE}-test")
+
 set(UTOPIA_LIBRARY "${CMAKE_SOURCE_DIR}/library")

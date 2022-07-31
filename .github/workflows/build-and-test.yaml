@@ -96,28 +96,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install tools
-        run: |
-          wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt | sudo apt-key add -
-          sudo wget -O /etc/apt/sources.list.d/viva64.list https://files.pvs-studio.com/etc/viva64.list
-          sudo apt update
-          sudo apt install pvs-studio
-          pvs-studio-analyzer credentials "PVS-Studio Free" FREE-FREE-FREE-FREE
-
       # 编译
       - name: Build
         run: |
-          git submodule update --init --recursive --depth=1 library/** cmake/**
+          git submodule update --init --recursive --depth=1 library/**
           sudo apt -y install ninja-build
           pip install meson
           python ./library/build.py --${mode}
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -DU_OPT_PVS_ENABLED=ON -G Ninja
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
           cmake --build . -j2
-          cmake --build . -j2 core.analyze || true
-          cmake --build . -j2 client.analyze || true
-          cmake --build . -j2 server.analyze || true
+          ctest .
 
   Build-And-Test-On-Windows:
     needs: [ Check ]
@@ -143,7 +133,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          git submodule update --init --recursive --depth=1 library/** cmake/**
+          git submodule update --init --recursive --depth=1 library/**
           $env:CC="cl.exe"
           $env:CXX="cl.exe"
           pip install meson
@@ -152,6 +142,7 @@ jobs:
           cd build
           cmake -S .. -B . -DCMAKE_BUILD_TYPE="$env:mode" -G "Visual Studio 17 2022"
           cmake --build . -j2
+          ctest .
 
   #================================================================
   # 设置快照tags

@@ -1,16 +1,14 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-//===-------------------- iostream.hpp ---------------------===//
+//===-------------------- iostream.hpp --------------------===//
 //
 // this file is under the MIT License
 // See https://opensource.org/licenses/MIT for license information.
 // Copyright(c) 2020-2022 moe-org All rights reserved.
 //
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 /// \file
 /// 这个文件实现了一个io流。用于向stdout和stderr进行输出。
 /// 这个流是线程安全的，并且拥有更多功能。所有输出都应该使用这个流。
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 
 #pragma once
 

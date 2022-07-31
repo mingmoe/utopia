@@ -6,7 +6,7 @@
 
 # clang tidy设置
 option(U_OPT_USE_CLANG_TIDY "using clang-tidy?")
-option(U_OPT_CLANG_TIDY_PATH "clang-tidy path?" "clang-tidy")
+option(U_OPT_CLANG_TIDY_PATH "clang-tidy path?" OFF)
 
 if(NOT U_OPT_CLANG_TIDY_PATH)
     set(U_OPT_CLANG_TIDY_PATH "clang-tidy")

@@ -58,6 +58,6 @@
 [submodule "library/vorbis"]
 	path = library/vorbis
 	url = https://gitlab.xiph.org/xiph/vorbis
-[submodule "cmake/pvs-studio-cmake-module"]
-	path = cmake/pvs-studio-cmake-module
-	url = https://github.com/viva64/pvs-studio-cmake-module
+[submodule "library/asio"]
+	path = library/asio
+	url = https://github.com/chriskohlhoff/asio/

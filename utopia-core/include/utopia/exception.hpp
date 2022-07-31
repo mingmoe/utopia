@@ -1,18 +1,14 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-//===-------------------- exception.hpp --------------------===//
+//===-------------------- exception.hpp -------------------===//
 //
 // this file is under the MIT License
 // See https://opensource.org/licenses/MIT for license information.
 // Copyright(c) 2020-2022 moe-org All rights reserved.
 //
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 /// \file
 /// 这个文件声明了utopia::core::Exception和一些常用异常。
 /// 程序中所有抛出的异常都应该是派生于utopia::core::Exception的。
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 
 #pragma once
 
@@ -132,7 +128,7 @@ namespace utopia::core {
 
     using NullPointerException = UniversalException<"NullPointerException">;
 
-    using IllegalParameterException =
-        UniversalException<"IllegalParameterException">;
+    using IllegalArgumentException =
+        UniversalException<"IllegalArgumentException">;
 
 }   // namespace utopia::core
