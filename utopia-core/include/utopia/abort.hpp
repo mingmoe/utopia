@@ -29,7 +29,7 @@ namespace utopia::core {
      * @brief debug断点
     */
     inline void debug_break() {
-#if !defined(DUTOPIA_NO_DEBUG_BREAK)
+#if !defined(UTOPIA_NO_DEBUG_BREAK)
     #if defined(_MSC_VER)
         __debugbreak();
     #elif __has_builtin(__builtin_debugtrap)

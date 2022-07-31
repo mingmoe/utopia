@@ -115,7 +115,7 @@ if(U_OPT_ASAN)
 endif()
 
 # UTOPIA_NO_DEBUG_BREAK
-option(U_OPT_DEBUG_BREAK "enable utopia::core::debug_break()? OFF to define UTOPIA_NO_DEBUG_BREAK macro?" OFF)
+option(U_OPT_DEBUG_BREAK "enable utopia::core::debug_break()? OFF to define UTOPIA_NO_DEBUG_BREAK macro" OFF)
 
 if(NOT U_OPT_DEBUG_BREAK)
     if(MSVC)
