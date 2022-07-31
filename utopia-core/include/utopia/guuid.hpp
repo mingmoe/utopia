@@ -10,10 +10,10 @@
 
 #include "utopia/exception.hpp"
 #include <cctype>
+#include <compare>
 #include <initializer_list>
 #include <string>
 #include <string_view>
-#include <compare>
 #include <vector>
 
 namespace utopia::core {
@@ -95,7 +95,7 @@ namespace utopia::core {
             return refs;
         }
 
-        std::strong_ordering operator<=>(const Guuid& another) const {
+        std::strong_ordering operator<=>(const Guuid &another) const {
             auto result = this->get_root_ref() <=> another.get_root_ref();
 
             if(result == std::strong_ordering::equal) {

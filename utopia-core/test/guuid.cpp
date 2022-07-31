@@ -1,4 +1,4 @@
-//===---------------------- guuid.hpp ---------------------===//
+//===---------------------- guuid.cpp ---------------------===//
 //
 // this file is under the MIT License
 // See https://opensource.org/licenses/MIT for license information.

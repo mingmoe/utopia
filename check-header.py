@@ -2,12 +2,17 @@
 
 import difflib
 from genericpath import isfile
+from posixpath import abspath
 import sys
 import os
 import glob
 import math
 
-directories = ["./utopia-core/**","./utopia-client/**","./utopia-server/**"]
+root = os.path.dirname(os.path.realpath(__file__))
+
+directories = ["/utopia-core/**","/utopia-client/**","/utopia-server/**"]
+
+directories = map(lambda x: os.path.abspath(root + x),directories)
 
 error = False
 
@@ -16,7 +21,7 @@ def check_file(path):
         lines = fs.readlines()
 
         if len(lines) <= 7:
-            comment_line = lines[0]
+            comment_line = lines[0:]
         else:
             comment_line = lines[0:7]
 
