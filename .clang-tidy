@@ -11,7 +11,8 @@ Checks: >-
   llvm-*,
   google-explicit-constructor,
   -modernize-use-auto,
-  -readability-avoid-const-params-in-decls
+  -readability-avoid-const-params-in-decls,
+  -modernize-use-trailing-return-type
 
 WarningsAsErrors: ''
 

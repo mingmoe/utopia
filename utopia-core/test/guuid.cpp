@@ -28,10 +28,18 @@ TEST_CASE("utopia::core::Guuid Constructor Test") {
     {
         auto func = []
         {
+            utopia::core::Guuid guuid{ "", {} };
+        };
+
+        CHECK_THROWS(func());
+    }
+    {
+        auto func = []
+        {
             utopia::core::Guuid guuid{ "I'm a illegal name!", {} };
         };
 
-        CHECK_THROWS(func);
+        CHECK_THROWS(func());
     }
     {
         auto func = []
@@ -39,6 +47,6 @@ TEST_CASE("utopia::core::Guuid Constructor Test") {
             utopia::core::Guuid guuid{ "root", { "I'm a illegal name!" } };
         };
 
-        CHECK_THROWS(func);
+        CHECK_THROWS(func());
     }
 }

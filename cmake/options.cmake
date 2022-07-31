@@ -113,3 +113,18 @@ if(U_OPT_ASAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${U_TEMP__OPT}")
     unset(U_TEMP__OPT)
 endif()
+
+# UTOPIA_NO_DEBUG_BREAK
+option(U_OPT_DEBUG_BREAK "enable utopia::core::debug_break()? OFF to define UTOPIA_NO_DEBUG_BREAK macro?" OFF)
+
+if(NOT U_OPT_DEBUG_BREAK)
+    if(MSVC)
+        set(U_TEMP__OPT "/DUTOPIA_NO_DEBUG_BREAK")
+    else()
+        set(U_TEMP__OPT "-DUTOPIA_NO_DEBUG_BREAK")
+    endif()
+
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${U_TEMP__OPT}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${U_TEMP__OPT}")
+    unset(U_TEMP__OPT)
+endif()
