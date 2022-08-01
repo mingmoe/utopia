@@ -1,14 +1,14 @@
-//===---------------------- hasher.hpp ---------------------===//
+//===--------------------- hasher.hpp ---------------------===//
 //
 // this file is under the MIT License
 // See https://opensource.org/licenses/MIT for license information.
 // Copyright(c) 2020-2022 moe-org All rights reserved.
 //
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 /// \file
 /// 这个文件声明了一个哈希器接口和一个hashable接口。
 /// 并实现了一个xxHash3的哈希器。
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 
 #pragma once
 
@@ -21,11 +21,11 @@
 namespace utopia::core {
 
     struct Hasher {
-        Hasher()               = default;
-        virtual ~Hasher()      = default;
+        Hasher()                               = default;
+        virtual ~Hasher()                      = default;
 
-        Hasher(const Hasher &) = delete;
-        Hasher(Hasher &&)      = delete;
+        Hasher(const Hasher &)                 = delete;
+        Hasher(Hasher &&)                      = delete;
 
         Hasher      &operator=(const Hasher &) = delete;
         Hasher      &operator=(Hasher &&)      = delete;
