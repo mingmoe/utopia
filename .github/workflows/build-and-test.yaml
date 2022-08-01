@@ -105,7 +105,7 @@ jobs:
           python ./library/build.py --${mode}
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE=${mode} -DCMAKE_C_COMPILER=${ccompiler} -DCMAKE_CXX_COMPILER=${cxxcompiler} -G Ninja -DU_OPT_ASAN=ON
           cmake --build . -j2
           ctest .
 
@@ -140,7 +140,7 @@ jobs:
           python ./library/build.py "--$env:mode"
           mkdir build
           cd build
-          cmake -S .. -B . -DCMAKE_BUILD_TYPE="$env:mode" -G "Visual Studio 17 2022"
+          cmake -S .. -B . -DCMAKE_BUILD_TYPE="$env:mode" -G "Visual Studio 17 2022" -DU_OPT_ASAN=ON
           cmake --build . -j2
           ctest .
 

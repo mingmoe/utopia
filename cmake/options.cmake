@@ -39,7 +39,7 @@ if(MSVC) # for msvc
     set(U__TEMP__FLAGS_DEBUG "/Od /MDd")
     set(U__TEMP__FLAGS_RELEASE "/O2 /MD /DNDEBUG")
 
-    set(CMAKE_C_FLAGS "${U__TEMP__FLAGS_} /std:c11")
+    set(CMAKE_C_FLAGS "${U__TEMP__FLAGS_}")
     set(CMAKE_C_FLAGS_DEBUG "${U__TEMP__FLAGS_DEBUG}")
     set(CMAKE_C_FLAGS_RELEASE "${U__TEMP__FLAGS_RELEASE}")
 
@@ -58,11 +58,11 @@ else() # for gcc\clang
     set(U__TEMP__FLAGS_DEBUG "-O0 -ggdb")
     set(U__TEMP__FLAGS_RELEASE "-O3 -DNDEBUG")
 
-    set(CMAKE_C_FLAGS "${U__TEMP__FLAGS_} -std=c11")
+    set(CMAKE_C_FLAGS "${U__TEMP__FLAGS_} -std=c99")
     set(CMAKE_C_FLAGS_DEBUG "${U__TEMP__FLAGS_DEBUG}")
     set(CMAKE_C_FLAGS_RELEASE "${U__TEMP__FLAGS_RELEASE}")
 
-    set(CMAKE_CXX_FLAGS "${U__TEMP__FLAGS_} -std=c++20 -frtti")
+    set(CMAKE_CXX_FLAGS "${U__TEMP__FLAGS_} -std=c++20 -frtti -fexception")
     set(CMAKE_CXX_FLAGS_DEBUG "${U__TEMP__FLAGS_DEBUG}")
     set(CMAKE_CXX_FLAGS_RELEASE "${U__TEMP__FLAGS_RELEASE}")
 
@@ -83,20 +83,6 @@ function(u_add_define)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${arg}" PARENT_SCOPE)
         endif()
     endforeach()
-endfunction()
-
-function(u_enable_strict_wanrnings)
-    if(MSVC)
-        string(REPLACE "/W1" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        string(REPLACE "/W1" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" PARENT_SCOPE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
-    else()
-        string(REPLACE "-W" "-Wall -Wextra " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        string(REPLACE "-W" "-Wall -Wextra " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" PARENT_SCOPE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
-    endif()
 endfunction()
 
 # 地址消毒

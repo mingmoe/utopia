@@ -87,4 +87,20 @@ add_subdirectory("${UTOPIA_LIBRARY}/doctest" EXCLUDE_FROM_ALL)
 include("${UTOPIA_LIBRARY}/doctest/scripts/cmake/doctest.cmake")
 #====================
 
+#===== xxHash ======
+set(XXHASH_BUILD_ENABLE_INLINE_API ON)
+set(BUILD_SHARED_LIBS OFF)
+add_subdirectory("${UTOPIA_LIBRARY}/xxHash/cmake_unofficial" EXCLUDE_FROM_ALL)
+#===================
+
+#===== openal-soft ======
+set(ALSOFT_INSTALL OFF)
+set(ALSOFT_INSTALL_CONFIG OFF)
+set(ALSOFT_INSTALL_HRTF_DATA OFF)
+set(ALSOFT_INSTALL_AMBDEC_PRESETS OFF)
+set(ALSOFT_INSTALL_EXAMPLES OFF)
+set(ALSOFT_INSTALL_UTILS OFF)
+add_subdirectory("${UTOPIA_LIBRARY}/openal-soft" EXCLUDE_FROM_ALL)
+#========================
+
 u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/import-library.cmake")

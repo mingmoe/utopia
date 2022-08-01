@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include "utopia/constexpr.hpp"
 #include "utopia/exception.hpp"
+#include "utopia/template.hpp"
 #include <cctype>
 #include <compare>
 #include <initializer_list>
@@ -33,13 +35,13 @@ namespace utopia::core {
          * @param str 要检查的字符串
          * @return 如果合法，返回true，否则返回false
         */
-        static bool is_legal_name(std::string_view str) noexcept {
+        constexpr static bool is_legal_name(std::string_view str) noexcept {
             if(str.size() == 0) {
                 return false;
             }
 
             for(auto c : str) {
-                if(std::isalnum(c) == 0 && c != '_') {
+                if(utopia::core::isalnum(c) == 0 && c != '_') {
                     return false;
                 }
             }
@@ -53,38 +55,37 @@ namespace utopia::core {
          * 
          * @note root和namespaces必须满足正则表达式[a-zA-Z0-9_]+
         */
-        Guuid(std::string_view                        root,
-              std::initializer_list<std::string_view> namespaces) {
-            auto check = [](std::string_view str)
+        constexpr Guuid(std::string_view                        root,
+                        std::initializer_list<std::string_view> namespaces) {
+            auto check = [](const std::string_view &str)
             {
                 if(!is_legal_name(str)) {
                     throw IllegalArgumentException{ "illegal guuid name" };
                 }
             };
             check(root);
-
             this->root = root;
-            this->namespaces.reserve(namespaces.size());
 
-            for(auto space : namespaces) {
+            for(auto &space : namespaces) {
                 check(space);
                 this->namespaces.emplace_back(space);
             }
         }
 
-        std::string get_root() const {
+        constexpr inline std::string get_root() const {
             return this->root;
         }
 
-        std::vector<std::string> get_namespaces() const {
+        constexpr inline std::vector<std::string> get_namespaces() const {
             return this->namespaces;
         }
 
-        std::string_view get_root_ref() const {
+        constexpr inline std::string_view get_root_ref() const {
             return std::string_view{ this->root };
         }
 
-        std::vector<std::string_view> get_namespace_ref() const {
+        constexpr inline std::vector<std::string_view>
+            get_namespace_ref() const {
             std::vector<std::string_view> refs;
             refs.reserve(namespaces.size());
 
@@ -95,7 +96,8 @@ namespace utopia::core {
             return refs;
         }
 
-        std::strong_ordering operator<=>(const Guuid &another) const {
+        constexpr inline std::strong_ordering
+            operator<=>(const Guuid &another) const {
             auto result = this->get_root_ref() <=> another.get_root_ref();
 
             if(result == std::strong_ordering::equal) {
@@ -107,7 +109,7 @@ namespace utopia::core {
             }
         }
 
-        bool operator==(const Guuid &another) const {
+        constexpr inline bool operator==(const Guuid &another) const {
             return ((*this) <=> another) == std::strong_ordering::equal;
         }
     };

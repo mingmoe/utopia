@@ -61,3 +61,9 @@
 [submodule "library/asio"]
 	path = library/asio
 	url = https://github.com/chriskohlhoff/asio/
+[submodule "library/openal-soft"]
+	path = library/openal-soft
+	url = https://github.com/kcat/openal-soft
+[submodule "library/xxHash"]
+	path = library/xxHash
+	url = https://github.com/Cyan4973/xxHash

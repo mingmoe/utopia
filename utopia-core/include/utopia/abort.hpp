@@ -7,7 +7,7 @@
 //===------------------------------------------------------===//
 /// \file
 /// 这个文件负责处理程序的中断，信号，断点等。
-//===-------------------------------------------------------===//
+//===------------------------------------------------------===//
 
 #pragma once
 
@@ -37,7 +37,7 @@ namespace utopia::core {
     #elif defined(SIGTRAP)
         raise(SIGTRAP);
     #else
-        #error no debug break impl
+        #error no debug break impl found
     #endif
 #endif
         return;
@@ -99,7 +99,7 @@ namespace utopia::core {
 
 /// @macro debug_u_assert 这个宏在release构建下不会进行断言。
 #ifdef NDEBUG
-    #define u_debug_assert(...)
+    #define utopia_debug_assert(...)
 #else
-    #define u_debug_assert(...) utopia::core::u_assert(__VA_ARGS__)
+    #define utopia_debug_assert(...) utopia::core::u_assert(__VA_ARGS__)
 #endif
