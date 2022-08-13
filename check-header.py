@@ -3,6 +3,7 @@
 import difflib
 from genericpath import isfile
 from posixpath import abspath
+from sre_parse import fix_flags
 import sys
 import os
 import glob
@@ -19,15 +20,15 @@ error = False
 try_fix = False
 
 def check_file(path):
-    with open(path,mode="r",encoding="utf-8") as fs:
+    with open(path,mode="r+",encoding="utf-8") as fs:
         lines = fs.readlines()
 
-        if len(lines) <= 7:
+        if len(lines) <= 15:
             comment_line = lines[0:]
             rest_lines = []
         else:
-            comment_line = lines[0:7]
-            rest_lines = lines[7:]
+            comment_line = lines[0:15]
+            rest_lines = lines[15:]
 
         n = os.path.basename(path)
 
@@ -66,13 +67,31 @@ def check_file(path):
         ):
             if try_fix:
                 fs.truncate(0)
-                fs.write(all_lines)
-                fs.wrtie('\n'.join(rest_lines))
+                fs.seek(0,0)
+                fs.write(''.join(all_lines))
+                fs.write(''.join(rest_lines))
             else:
                 error=True
                 print(it,end="")
 
         pass
+
+args = sys.argv[1:]
+
+index = 0
+
+while index != len(args):
+    arg = args[index]
+
+    if arg == "--check":
+        try_fix = False
+    elif arg == '--fix':
+        try_fix = True
+    else:
+        print("only support `--fix` or `--check` options")
+        exit(1)
+
+    index += 1
 
 
 for d in directories:

@@ -1,10 +1,18 @@
-//===---------------------- guuid.hpp ---------------------===//
+//===-------------------------- guuid.hpp -------------------------===//
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
 //
-// this file is under the MIT License
-// See https://opensource.org/licenses/MIT for license information.
-// Copyright(c) 2020-2022 moe-org All rights reserved.
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
 //
-//===------------------------------------------------------===//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -202,9 +210,11 @@ namespace utopia::core {
 
             // generate
             auto id = hasher.workout();
+            hasher.write(id);
+            auto second_id = hasher.workout();
             hasher.reset();
 
-            auto unique_str = fmt::format("{:X}", id);
+            auto unique_str = fmt::format("{:X}{:X}", id,second_id);
             auto copied     = origin.get_namespace_ref();
             copied.emplace_back(std::move(unique_str));
 
