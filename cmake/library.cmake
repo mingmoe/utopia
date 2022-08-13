@@ -1,7 +1,18 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-# this file is under MIT License.
-# See https://opensource.org/licenses/MIT for license information.
-# Copyright (c) 2020-2022 moe-org All rights reserved.
+#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 set(SKIP_INSTALL_ALL ON)
@@ -55,6 +66,10 @@ find_package("Vorbis" REQUIRED CONFIG)
 find_package("zstd" REQUIRED CONFIG)
 #================
 
+#===== OpenSSL =====
+find_package("OpenSSL" 3.0.0 REQUIRED COMPONENTS Crypto SSL)
+#===================
+
 #======= ICU =======
 # this library is compiled by ourselves
 u_add_subdirectory_at_root("${UTOPIA_LIBRARY}/icu/" EXCLUDE_FROM_ALL)
@@ -73,12 +88,6 @@ target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_sdl.cpp
 target_sources(imgui PUBLIC "${UTOPIA_LIBRARY}/imgui/backends/imgui_impl_sdlrenderer.cpp")
 
 target_link_libraries(imgui PUBLIC SDL2::SDL2-static)
-
-# close all warnings
-target_compile_options(imgui PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W1>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-W>
-)
 #==================
 
 #===== doctest ======

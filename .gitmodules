@@ -67,3 +67,6 @@
 [submodule "library/xxHash"]
 	path = library/xxHash
 	url = https://github.com/Cyan4973/xxHash
+[submodule "library/openssl"]
+	path = library/openssl
+	url = https://github.com/openssl/openssl

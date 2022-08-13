@@ -8,6 +8,7 @@ import os
 import pathlib
 import multiprocessing
 
+import download_tools
 
 # ================
 # helper function
@@ -155,6 +156,15 @@ def get_os_lib_ext() -> str:
     else:
         raise Exception("not supported platform")
 
+
+def get_os_exe_ext() -> str:
+    if is_android() or is_linux():
+        return ""
+    elif is_window():
+        return ".exe"
+    else:
+        raise Exception("unknown platform")
+
 def get_os_lib_prefix() -> str:
     if is_android() or is_linux():
         return "lib"
@@ -171,7 +181,9 @@ def get_build_path() -> str:
 
 
 def get_binary_path_of_library(name: str) -> str:
-    return get_build_path() + f"/{name}"
+    path = get_build_path() + f"/{name}"
+    mkdirs(path)
+    return path
 
 
 def get_install_root() -> str:
@@ -179,7 +191,7 @@ def get_install_root() -> str:
 
 
 def get_install_path_of_library(name: str) -> str:
-    return get_install_root() + f"/{name}"
+    return os.path.abspath(get_install_root() + f"/{name}")
 
 
 ANDROID_API_VERSION = 28
@@ -275,7 +287,7 @@ def call_git(args:List[str],work_dir:str):
 
 def clear_source(source:str):
     call_git(['reset','--hard','HEAD'],source)
-    call_git(['clean','-fd'],source)
+    call_git(['clean','-fdx'],source)
 
 # ================
 # cmake build
@@ -400,7 +412,7 @@ class MesonTask:
                 print(f"stderr:{e}\n")
                 raise Exception(f"meson failed with return code {meson.returncode}")
 
-    def build(self, name: str):
+    def build(self):
         # clear build
         clear_source(self.source_path)
 
@@ -500,7 +512,7 @@ def build_meson_library(name: str, options: List[str], definition: List[str]) ->
     if is_android():
         task.cross_file = generate_meson_cross_file()
 
-    task.build(name)
+    task.build()
 
 
 # ========================
@@ -616,7 +628,68 @@ build_library('flac', [
 # ========================
 build_meson_library('harfbuzz', [], ['cpp_rtti=true', 'tests=disabled', 'cpp_std=c++20', 'default_library=static'])
 
-# generate
+#===================================
+# OPEN SSL
+with open_log(get_stdout_log_of_library("openssl")) as stdout, \
+        open_log(get_stderr_log_of_library("openssl")) as stderr:
+
+    # prepare source
+    clear_source("openssl")
+
+    import shutil
+
+    shutil.copytree(get_source_path_of_library('openssl'), get_binary_path_of_library('openssl'),dirs_exist_ok=True)
+
+    # building
+    cmds = [
+        get_executable_path("pwsh"),"-NoProfile","-File",f'{get_root()}/build_openssl.ps1',
+    f"\"--prefix={get_install_path_of_library('openssl')}\"",
+    f"\"--openssldir={get_install_path_of_library('openssl')}/config\"",
+    f"\"--{global_info.mode.lower()}\""]
+
+    # 准备参数
+    env = os.environ.copy()
+    env['UTOPIA_BUILD_ANDROID'] = str(is_android()).lower()
+
+    if is_android():
+        env['ANDROID_NDK_ROOT'] = global_info.ndk_path
+        cmds.append(f"\"-D__ANDROID_API__={get_android_api_version()}\"")
+
+        if is_linux():
+            env['path'] += f":{get_android_llvm_root_path()}/bin"
+        elif is_window():
+            env['path'] += f";{get_android_llvm_root_path()}/bin"
+
+    # 执行
+    print(f"running {cmds}")
+    stdout.write(f"running {cmds}\n")
+    stdout.flush()
+    stderr.write(f"running {cmds}\n")
+    stderr.flush()
+
+    pwsh = subprocess.Popen(
+        args=cmds,
+        cwd=f"{get_binary_path_of_library('openssl')}",
+        encoding="utf-8",
+        stdout=stdout,
+        stderr=stderr,
+        bufsize=0,
+        env=env)
+    
+    pwsh.wait()
+
+    if pwsh.returncode != 0:
+        stdout.seek(0,0)
+        stderr.seek(0,0)
+        o = stdout.read()
+        e = stdout.read()
+        print("ERROR")
+        print(f"stdout:{o}\n")
+        print(f"stderr:{e}\n")
+        raise Exception(f"pwsh failed with return code {pwsh.returncode}")
+
+#======================================================
+# generate library-info.cmake
 check_lists(list_info)
 
 with open(get_list_info_file(),"w",encoding='utf-8') as fs:

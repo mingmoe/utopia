@@ -6,11 +6,13 @@
 //
 //===------------------------------------------------------===//
 /// \file
-/// copy from <source_location> in Windows
+/// copy from "source_location" in Windows
 /// with little modify for clang
 //===------------------------------------------------------===//
 // Copyright (c) Microsoft Corporation.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+#pragma once
 
 #include <cstdint>
 
@@ -62,4 +64,4 @@ namespace utopia::core {
     };
 }   // namespace utopia::core
 
-#pragma once
+#undef UTOPIA_BUILT_IN_COLUMN

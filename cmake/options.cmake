@@ -1,7 +1,18 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-# this file is under MIT License.
-# See https://opensource.org/licenses/MIT for license information.
-# Copyright (c) 2020-2022 moe-org All rights reserved.
+#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 # clang tidy设置
@@ -35,7 +46,7 @@ u_close_clang_tidy()
 # 设置编译选项
 if(MSVC) # for msvc
     set(U__TEMP__FLAGS_ 
-    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W1 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets")
+    "/DWIN32 /D_WINDOWS /utf-8 /Zi /W0 /permissive- /EHsc /GR /Zc:__cplusplus /D_CRT_SECURE_NO_WARNINGS /external:anglebrackets")
     set(U__TEMP__FLAGS_DEBUG "/Od /MDd")
     set(U__TEMP__FLAGS_RELEASE "/O2 /MD /DNDEBUG")
 
@@ -62,7 +73,7 @@ else() # for gcc\clang
     set(CMAKE_C_FLAGS_DEBUG "${U__TEMP__FLAGS_DEBUG}")
     set(CMAKE_C_FLAGS_RELEASE "${U__TEMP__FLAGS_RELEASE}")
 
-    set(CMAKE_CXX_FLAGS "${U__TEMP__FLAGS_} -std=c++20 -frtti -fexception")
+    set(CMAKE_CXX_FLAGS "${U__TEMP__FLAGS_} -std=c++20")
     set(CMAKE_CXX_FLAGS_DEBUG "${U__TEMP__FLAGS_DEBUG}")
     set(CMAKE_CXX_FLAGS_RELEASE "${U__TEMP__FLAGS_RELEASE}")
 
@@ -86,7 +97,7 @@ function(u_add_define)
 endfunction()
 
 # 地址消毒
-option(U_OPT_ASAN "enable Address Sanitize? default enable in debug" OFF)
+option(U_OPT_ASAN "enable Address Sanitize?" OFF)
 
 if(U_OPT_ASAN)
     if(MSVC)

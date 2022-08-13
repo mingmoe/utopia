@@ -6,7 +6,9 @@ change-log.txt
 # build dir
 out/
 build/
-output-package/
+
+# temp dir
+temp/
 
 # Ignore any editor or IDE
 .vscode/
@@ -15,3 +17,6 @@ output-package/
 
 # node.js module
 node_modules/
+
+#release
+release/

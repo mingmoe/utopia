@@ -13,7 +13,7 @@
     "scripts": {
       "lint-last-commit": "npx commitlint --from HEAD~1 --verbose",
       "commit": "git status && git cz",
-      "try-release": "npx tsc && node ./output-package/release.js",
+      "try-release": "npx tsc && node ./temp/release.js",
       "check-style": "python ./check-all.py"
     },
     "repository": {

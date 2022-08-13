@@ -27,9 +27,9 @@ namespace utopia::core {
 
         Entity(const Guuid entity_id) : id(entity_id) {}
 
-        virtual ~Entity()                          = default;
+        virtual ~Entity()       = default;
 
-        virtual Entity &operator=(const Entity &)  = 0;
+        virtual Entity &operator=(const Entity &) = 0;
         virtual Entity &operator=(const Entity &&) = 0;
 
         /**
@@ -47,6 +47,18 @@ namespace utopia::core {
         virtual Guuid get_id() const noexcept {
             return id;
         }
+
+        /**
+         * @brief 实体是否可碰撞。
+         * 一个方块内不能有两个可碰撞的实体共存。
+        */
+        virtual bool is_collidable() = 0;
+
+        /**
+         * @brief 实体是否可阻挡。
+         * 一个方块内不能有多个可阻挡实体共存。
+        */
+        virtual bool is_blockable() = 0;
     };
 
 

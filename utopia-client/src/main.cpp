@@ -6,6 +6,18 @@
 //
 //===------------------------------------------------------===//
 
+#include "utopia/guuid.hpp"
+#include "utopia/init.hpp"
+#include "utopia/iostream.hpp"
+
 int main() {
+    utopia::core::setup_icu_data();
+    
+    for(auto i = 0; i != 10; i++) {
+        utopia::core::write_stdout(
+            utopia::core::Guuid::new_unique().to_string() + "\n");
+    }
+
+
     return 0;
 }

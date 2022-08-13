@@ -1,9 +1,23 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-# this file is under MIT License.
-# See https://opensource.org/licenses/MIT for license information.
-# Copyright (c) 2020-2022 moe-org All rights reserved.
+#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-cmake_minimum_required (VERSION 3.22)
+cmake_minimum_required (VERSION 3.23)
+
+message(STATUS 
+"Cmake version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}")
 
 # init
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/base.cmake")
@@ -29,6 +43,8 @@ u_open_clang_tidy()
 u_add_subdirectory_at_root ("utopia-core")
 u_add_subdirectory_at_root ("utopia-client")
 u_add_subdirectory_at_root ("utopia-server")
+
+u_include_at_root("${CMAKE_CURRENT_SOURCE_DIR}/cmake/install.cmake")
 
 #==============================================
 # 添加cmake自定义项目

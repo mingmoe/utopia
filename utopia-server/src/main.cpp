@@ -8,8 +8,10 @@
 
 #include "utopia/exception.hpp"
 #include "utopia/iostream.hpp"
+#include "utopia/init.hpp"
 
 auto main() -> int {
+    utopia::core::setup_icu_data();
     auto exception = utopia::core::IOException("unknown exception");
     utopia::core::write_stderr(exception.what());
 

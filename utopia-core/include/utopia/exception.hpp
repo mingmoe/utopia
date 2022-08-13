@@ -131,6 +131,8 @@ namespace utopia::core {
     using IllegalArgumentException =
         UniversalException<"IllegalArgumentException">;
 
-    using RuntimeException = UniversalException<"RuntimeException">;
+    using RuntimeException    = UniversalException<"RuntimeException">;
+
+    using OutOfRangeException = UniversalException<"OutOfRangeException">;
 
 }   // namespace utopia::core

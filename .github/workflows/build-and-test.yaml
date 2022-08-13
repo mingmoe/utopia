@@ -174,7 +174,7 @@ jobs:
           build_number: ${{ github.run_number }}
 
         run: |
-          cmake -DU_OPT_GET_VERSION_EXIT=ON -DU_OPT_BUILD_NUMBER=${build_number} || true
+          cmake -DU_OPT_BUILD_NUMBER=${build_number} || true
           tag_version=$(cat version.txt)
           echo TAG:${tag_version}
           export GPG_TTY=$(tty)

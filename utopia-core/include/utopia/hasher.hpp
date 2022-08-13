@@ -8,49 +8,45 @@
 /// \file
 /// 这个文件声明了一个哈希器接口和一个hashable接口。
 /// 并实现了一个xxHash3的哈希器。
+/// 并且为utopia::core::Hashable实现了std::hash。
 //===------------------------------------------------------===//
 
 #pragma once
 
 #include "utopia/exception.hpp"
+#include "utopia/scope_guard.hpp"
+#include "utopia/stream.hpp"
 #include <cstdint>
+#include <memory>
 #include <string_view>
 #include <vector>
 #include <xxhash.h>
 
 namespace utopia::core {
 
-    struct Hasher {
-        Hasher()                               = default;
-        virtual ~Hasher()                      = default;
+    using hash_t = unsigned long long;
 
-        Hasher(const Hasher &)                 = delete;
-        Hasher(Hasher &&)                      = delete;
+    struct Hasher : public OutputStream {
+        Hasher()               = default;
+        virtual ~Hasher()      = default;
+
+        Hasher(const Hasher &) = delete;
+        Hasher(Hasher &&)      = delete;
 
         Hasher      &operator=(const Hasher &) = delete;
-        Hasher      &operator=(Hasher &&)      = delete;
+        Hasher      &operator=(Hasher &&) = delete;
 
-        virtual void reset()                   = 0;
-        virtual void write(char)               = 0;
-        virtual void write(unsigned char)      = 0;
-        virtual void write(short)              = 0;
-        virtual void write(unsigned short)     = 0;
-        virtual void write(signed)             = 0;
-        virtual void write(unsigned)           = 0;
-        virtual void write(long)               = 0;
-        virtual void write(unsigned long)      = 0;
-        virtual void write(long long)          = 0;
-        virtual void write(unsigned long long) = 0;
-        virtual void write(float)              = 0;
-        virtual void write(double)             = 0;
-        virtual void write(long double)        = 0;
-        virtual void write(std::string_view)   = 0;
+        virtual void reset()              = 0;
+
+        virtual void flush() override {}
+
+        virtual void close() override {}
 
         /**
          *  @brief get the hash result
          * @note workout won't reset
         */
-        virtual std::uint64_t workout() = 0;
+        virtual hash_t workout() = 0;
 
         /**
          * @brief 用于遍历容器的write
@@ -71,7 +67,7 @@ namespace utopia::core {
      * @brief 表示一个可以进行hash的对象
     */
     struct Hashable {
-        virtual void get_hash(Hasher &) = 0;
+        virtual void get_hash(Hasher &) const = 0;
     };
 
     /**
@@ -81,6 +77,13 @@ namespace utopia::core {
     */
     class XXHashHasher : public Hasher {
         XXH3_state_t *state = XXH3_createState();
+
+        template<class T>
+        void write_to(T v) {
+            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
+                throw RuntimeException{ "failed to update xxhash3" };
+            }
+        }
 
       public:
 
@@ -101,68 +104,47 @@ namespace utopia::core {
         }
 
         virtual void write(char v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(unsigned char v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(short v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(unsigned short v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(signed v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(unsigned v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(long v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(unsigned long v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(long long v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(unsigned long long v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(float v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(double v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
-            }
+            write_to(v);
         }
         virtual void write(long double v) override {
-            if(XXH3_64bits_update(state, &v, sizeof(v)) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
+            write_to(v);
+        }
+        virtual void write(std::span<std::byte> bytes) override {
+            for(auto byte : bytes) {
+                write_to(byte);
             }
         }
         virtual void write(std::string_view v) override {
@@ -177,7 +159,7 @@ namespace utopia::core {
             }
         }
 
-        virtual std::uint64_t workout() override {
+        virtual hash_t workout() override {
             auto result = XXH3_64bits_digest(state);
 
             return result;
@@ -185,3 +167,22 @@ namespace utopia::core {
     };
 
 }   // namespace utopia::core
+
+template<>
+struct std::hash<utopia::core::Hashable> {
+    std::size_t operator()(utopia::core::Hashable const &s) const noexcept {
+        thread_local std::unique_ptr<utopia::core::XXHashHasher> l_hasher{
+            nullptr
+        };
+
+        if(l_hasher.get() == nullptr) {
+            l_hasher =
+                std::move(std::make_unique<utopia::core::XXHashHasher>());
+        }
+
+        l_hasher->reset();
+
+        s.get_hash(*l_hasher.get());
+        return l_hasher->workout();
+    }
+};
