@@ -1,5 +1,5 @@
 //===---------------------- serializable.hpp ----------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
 /// \file
 /// 声明一个可序列化接口。实现这个接口要求同时实现反序列化。
 /// 这个接口和游戏存档有关，输出和输入二进制格式。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -43,7 +43,7 @@ namespace utopia::core {
          * @param from_origin 对象的输入流
          * @return 反序列化的对象
         */
-        virtual T create(InputStream& from_origin) = 0;
+        virtual T create(InputStream &from_origin) = 0;
     };
 
     /**
@@ -55,7 +55,7 @@ namespace utopia::core {
         /**
          * @brief 序列化对象
         */
-        virtual void save(T& obj,OutputStream& output) = 0;
+        virtual void save(T &obj, OutputStream &output) = 0;
     };
 
     // 关于Serializable和XXXFactory的区别:

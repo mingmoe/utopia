@@ -1,5 +1,5 @@
 //===-------------------------- abort.hpp -------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
 //===--------------------------------------------------------------===//
 /// \file
 /// 这个文件负责处理程序的中断，信号，断点等。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 

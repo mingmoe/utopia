@@ -1,5 +1,5 @@
 //===--------------------- source_location.hpp --------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
 /// \file
 /// copy from "source_location" in Windows
 /// with little modify for clang
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 // Copyright (c) Microsoft Corporation.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 

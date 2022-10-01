@@ -1,5 +1,5 @@
 //===------------------------- stream.hpp -------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
 /// \file
 /// 实现了一个输入，输出流接口。
 /// 并且实现了一个内存流。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -53,7 +53,6 @@ namespace utopia::core {
         virtual void write(float)                = 0;
         virtual void write(double)               = 0;
         virtual void write(long double)          = 0;
-        virtual void write(std::string_view)     = 0;
         virtual void write(std::span<std::byte>) = 0;
     };
 
@@ -80,174 +79,195 @@ namespace utopia::core {
     struct Stream : public OutputStream, public InputStream {};
 
     /**
-     * @brief 内存流
+     * @brief 简单流接口。用户只需要实现read和wirte即可使用。
     */
-    class MemoryStream : public Stream {
-        std::vector<char> buffer{};
-        std::size_t       read_offset{ 0 };
-
-        template<class T>
-        void write_to(T t) {
-            const auto size  = sizeof(t);
-            const auto begin = buffer.size();
-
-            for(auto it = size; it != 0; it--) {
-                buffer.push_back(0);
-            }
-
-            memcpy(buffer.data() + begin, &t, size);
-        }
-
-        template<class T>
-        T read_from() {
-            const auto size         = sizeof(T);
-
-            const auto final_offset = size + read_offset;
-
-            if(final_offset >= buffer.size()) {
-                throw OutOfRangeException{
-                    "read from MemoryStream out of range"
-                };
-            }
-            const auto buffer = this->buffer.data();
-
-            char       read[sizeof(T)]{ 0 };
-
-            for(auto it = 0; it != size; it++) {
-                read[it] = buffer[read_offset + it];
-            }
-
-            read_offset = final_offset;
-
-            T result    = std::bit_cast<T>(read);
-            return result;
-        }
+    class SimplyStream : public Stream {
+        std::size_t read_offset{ 0 };
 
       public:
 
-        virtual void flush() override {}
-        virtual void close() override {}
+        virtual void write_to(const std::span<std::byte> data)           = 0;
 
+        virtual const std::span<std::byte> read_from(std::size_t offset,
+                                                     std::size_t length) = 0;
+
+        virtual void                       flush() override {}
+        virtual void                       close() override {}
+
+        //========== WRITE ==========//
         virtual void write(char v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(unsigned char v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(short v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(unsigned short v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(signed v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(unsigned v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(long v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(unsigned long v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(long long v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(unsigned long long v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(float v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(double v) override {
-            write_to(v);
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(long double v) override {
-            write_to(v);
-        }
-        virtual void write(std::string_view v) override {
-            for(auto c : v) {
-                write_to(c);
-            }
+            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
+                                          sizeof(v)));
         }
         virtual void write(std::span<std::byte> v) override {
             for(auto c : v) {
-                write_to(std::to_integer<char>(c));
+                write(std::to_integer<unsigned char>(c));
             }
         }
 
+        //========== READ ==========//
         virtual std::span<std::byte> get_bytes(size_t length) override {
-            const auto final_offset = length + read_offset;
-
-            if(final_offset >= buffer.size()) {
-                throw OutOfRangeException{
-                    "read from MemoryStream out of range"
-                };
-            }
-            const auto buffer =
-                reinterpret_cast<std::byte *>(this->buffer.data());
-
-            std::span<std::byte> result(buffer, buffer + length);
-
-            return result;
+            auto s = read_from(read_offset, length);
+            read_offset += length;
+            return s;
         }
         virtual char get_char() override {
-            return read_from<char>();
+            const auto length = sizeof(this->get_char());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return std::to_integer<char>(s[0]);
         }
         virtual unsigned char get_uchar() override {
-            return read_from<unsigned char>();
+            const auto length = sizeof(this->get_uchar());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return std::to_integer<unsigned char>(s[0]);
         }
         virtual short get_short() override {
-            return read_from<short>();
+            const auto length = sizeof(this->get_short());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<short *>((s.data()));
         }
         virtual unsigned short get_ushort() override {
-            return read_from<unsigned short>();
+            const auto length = sizeof(this->get_ushort());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<unsigned short *>((s.data()));
         }
         virtual signed get_int() override {
-            return read_from<signed>();
+            const auto length = sizeof(this->get_int());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<signed *>((s.data()));
         }
         virtual unsigned get_uint() override {
-            return read_from<unsigned>();
+            const auto length = sizeof(this->get_uint());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<unsigned *>((s.data()));
         }
         virtual long get_long() override {
-            return read_from<long>();
+            const auto length = sizeof(this->get_long());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<long *>((s.data()));
         }
         virtual unsigned long get_ulong() override {
-            return read_from<unsigned long>();
+            const auto length = sizeof(this->get_ulong());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<unsigned long *>((s.data()));
         }
         virtual long long get_llong() override {
-            return read_from<long long>();
+            const auto length = sizeof(this->get_llong());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<long long *>((s.data()));
         }
         virtual unsigned long long get_ullong() override {
-            return read_from<unsigned long long>();
+            const auto length = sizeof(this->get_ullong());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<unsigned long long *>((s.data()));
         }
         virtual float get_float() override {
-            return read_from<float>();
+            const auto length = sizeof(this->get_float());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<float *>((s.data()));
         }
         virtual double get_double() override {
-            return read_from<double>();
+            const auto length = sizeof(this->get_double());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<double *>((s.data()));
         }
         virtual long double get_ldouble() override {
-            return read_from<long double>();
+            const auto length = sizeof(this->get_ldouble());
+            auto       s      = read_from(read_offset, length);
+            read_offset += length;
+            return *reinterpret_cast<long double *>((s.data()));
         }
 
         void clear() {
-            this->buffer.clear();
             this->read_offset = 0;
         }
+    };
 
-        /**
-         * @return 返回只读，不拥有所有权的缓冲区。
-         * 在下次调用非const成员函数之后失效。
-        */
-        std::span<const std::byte> get() const {
-            const auto buffer =
-                reinterpret_cast<const std::byte *>(this->buffer.data());
-            const auto size = this->buffer.size();
+    /**
+     * @brief 内存流
+    */
+    class MemoryStream : public SimplyStream {
+        std::vector<std::byte> datas;
 
-            return std::span{ buffer, buffer + size };
+      public:
+
+        virtual void write_to(const std::span<std::byte> data) {
+            datas.reserve(datas.size() + data.size());
+
+            for(auto &b : data) {
+                datas.push_back(b);
+            }
+        }
+
+        virtual const std::span<std::byte> read_from(std::size_t offset,
+                                                     std::size_t length) {
+            if(offset + length > datas.size()) {
+                throw utopia::core::OutOfRangeException{
+                    "MemoryStream:read out of range"
+                };
+            }
+
+            return std::span<std::byte>(datas.data() + offset, length);
         }
     };
 

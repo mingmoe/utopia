@@ -1,5 +1,5 @@
 //===-------------------------- guuid.hpp -------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -198,9 +198,14 @@ namespace utopia::core {
             hasher.write(tm->tm_sec);
 
             // write origin
-            hasher.write(origin.get_root_ref());
+            auto ref = origin.get_root_ref();
+            for(auto c : ref) {
+                hasher.write(c);
+            }
             for(auto &s : origin.get_namespace_ref()) {
-                hasher.write(s);
+                for(auto c : s) {
+                    hasher.write(c);
+                }
             }
 
             // write some others
@@ -214,7 +219,7 @@ namespace utopia::core {
             auto second_id = hasher.workout();
             hasher.reset();
 
-            auto unique_str = fmt::format("{:X}{:X}", id,second_id);
+            auto unique_str = fmt::format("{:X}{:X}", id, second_id);
             auto copied     = origin.get_namespace_ref();
             copied.emplace_back(std::move(unique_str));
 

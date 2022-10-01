@@ -1,5 +1,5 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ add_library(${UTOPIA_CORE} STATIC
     "include/utopia/stream.hpp"
     "include/utopia/scope_guard.hpp"
     "include/utopia/init.hpp"
+    "include/utopia/resource.hpp"
     "src/iostream.cpp")
 
 target_include_directories(${UTOPIA_CORE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -49,9 +50,13 @@ endif()
 target_link_libraries(${UTOPIA_CORE} PUBLIC OpenSSL::SSL)
 target_link_libraries(${UTOPIA_CORE} PUBLIC OpenSSL::Crypto)
 
+target_link_libraries(${UTOPIA_CORE} PUBLIC CURL::libcurl)
 
 # testing
-add_executable(${UTOPIA_CORE_TEST} "test/guuid.cpp" "test/main.cpp")
+add_executable(${UTOPIA_CORE_TEST} 
+    "test/guuid.cpp" 
+    "test/main.cpp" 
+    "test/stream.cpp")
 target_link_libraries(${UTOPIA_CORE_TEST} PUBLIC doctest ${UTOPIA_CORE})
 doctest_discover_tests(${UTOPIA_CORE_TEST})
 

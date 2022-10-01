@@ -1,5 +1,5 @@
 //===-------------------------- init.hpp --------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -15,12 +15,12 @@
 //===--------------------------------------------------------------===//
 /// \file
 /// 声明一些程序初始化所需要的函数和数据等。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
-#include <unicode/putil.h>
 #include <filesystem>
+#include <unicode/putil.h>
 
 namespace utopia::core {
 
@@ -33,4 +33,4 @@ namespace utopia::core {
     }
 
 
-}
+}   // namespace utopia::core

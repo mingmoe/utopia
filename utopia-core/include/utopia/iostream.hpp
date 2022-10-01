@@ -1,5 +1,5 @@
 //===------------------------ iostream.hpp ------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
 /// \file
 /// 这个文件实现了一个io流。用于向stdout和stderr进行输出。
 /// 这个流是线程安全的，并且拥有更多功能。所有输出都应该使用这个流。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 

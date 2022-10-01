@@ -688,6 +688,22 @@ with open_log(get_stdout_log_of_library("openssl")) as stdout, \
         print(f"stderr:{e}\n")
         raise Exception(f"pwsh failed with return code {pwsh.returncode}")
 
+
+#===================================
+# CURL
+task = get_standard_cmake_task('curl', [
+    "-DBUILD_CURL_EXE=OFF",
+    "-DBUILD_SHARED_LIBS=OFF",
+    "-DENABLE_UNICODE=ON",
+    "-DCURL_USE_OPENSSL=ON",
+    f"-DCMAKE_PREFIX_PATH={get_install_path_of_library('openssl')}"
+])
+
+if is_debug():
+    task.generate_options.append("-DENABLE_DEBUG=ON")
+
+task.build()
+
 #======================================================
 # generate library-info.cmake
 check_lists(list_info)

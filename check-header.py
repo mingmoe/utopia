@@ -8,6 +8,7 @@ import sys
 import os
 import glob
 import math
+import fileinput
 
 root = os.path.dirname(os.path.realpath(__file__))
 
@@ -38,7 +39,7 @@ def check_file(path):
         last_line = "//===" + '-' * (len(first_line) - 1 - 10) + "===//\n"
 
         comments =  \
-"""//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+"""//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -80,12 +81,14 @@ args = sys.argv[1:]
 
 index = 0
 
+
 while index != len(args):
     arg = args[index]
 
     if arg == "--check":
         try_fix = False
     elif arg == '--fix':
+        input("if you need fix,please backup your code first! type entry key to continue")
         try_fix = True
     else:
         print("only support `--fix` or `--check` options")

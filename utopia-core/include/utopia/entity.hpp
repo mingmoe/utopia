@@ -1,5 +1,5 @@
 //===------------------------- entity.hpp -------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
 //===--------------------------------------------------------------===//
 /// \file
 /// 这个文件声明了一个实体接口。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -35,9 +35,9 @@ namespace utopia::core {
 
         Entity(const Guuid entity_id) : id(entity_id) {}
 
-        virtual ~Entity()       = default;
+        virtual ~Entity()                          = default;
 
-        virtual Entity &operator=(const Entity &) = 0;
+        virtual Entity &operator=(const Entity &)  = 0;
         virtual Entity &operator=(const Entity &&) = 0;
 
         /**

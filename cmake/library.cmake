@@ -1,5 +1,5 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+#   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
@@ -69,6 +69,10 @@ find_package("zstd" REQUIRED CONFIG)
 #===== OpenSSL =====
 find_package("OpenSSL" 3.0.0 REQUIRED COMPONENTS Crypto SSL)
 #===================
+
+#===== CURL =====
+find_package("CURL" REQUIRED)
+#================
 
 #======= ICU =======
 # this library is compiled by ourselves

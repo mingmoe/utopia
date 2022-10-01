@@ -1,5 +1,5 @@
 //===------------------------- hasher.hpp -------------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 /// 这个文件声明了一个哈希器接口和一个hashable接口。
 /// 并实现了一个xxHash3的哈希器。
 /// 并且为utopia::core::Hashable实现了std::hash。
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -35,16 +35,16 @@ namespace utopia::core {
     using hash_t = unsigned long long;
 
     struct Hasher : public OutputStream {
-        Hasher()               = default;
-        virtual ~Hasher()      = default;
+        Hasher()                               = default;
+        virtual ~Hasher()                      = default;
 
-        Hasher(const Hasher &) = delete;
-        Hasher(Hasher &&)      = delete;
+        Hasher(const Hasher &)                 = delete;
+        Hasher(Hasher &&)                      = delete;
 
         Hasher      &operator=(const Hasher &) = delete;
-        Hasher      &operator=(Hasher &&) = delete;
+        Hasher      &operator=(Hasher &&)      = delete;
 
-        virtual void reset()              = 0;
+        virtual void reset()                   = 0;
 
         virtual void flush() override {}
 
@@ -153,11 +153,6 @@ namespace utopia::core {
         virtual void write(std::span<std::byte> bytes) override {
             for(auto byte : bytes) {
                 write_to(byte);
-            }
-        }
-        virtual void write(std::string_view v) override {
-            if(XXH3_64bits_update(state, v.data(), v.size()) == XXH_ERROR) {
-                throw RuntimeException{ "failed to update xxhash3" };
             }
         }
 

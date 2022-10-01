@@ -1,5 +1,5 @@
 //===----------------------- scope_guard.hpp ----------------------===//
-//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://blog.kawayi.moe)
+//   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
 //===--------------------------------------------------------------===//
 /// \file
 /// 实现了一个guard scope
-//===------------------------------------------------------===//
+//===--------------------------------------------------------------===//
 
 #pragma once
 
@@ -42,10 +42,10 @@ namespace utopia::core {
             }
         }
 
-        ScopeGuard(const ScopeGuard &) = delete;
-        ScopeGuard(ScopeGuard &&)      = delete;
+        ScopeGuard(const ScopeGuard &)            = delete;
+        ScopeGuard(ScopeGuard &&)                 = delete;
         ScopeGuard &operator=(const ScopeGuard &) = delete;
-        ScopeGuard &operator=(ScopeGuard &&) = delete;
+        ScopeGuard &operator=(ScopeGuard &&)      = delete;
     };
 
     template<class T>
@@ -74,7 +74,7 @@ namespace utopia::core {
             return this->src;
         }
 
-        SourceGuard(const SourceGuard &) = delete;
+        SourceGuard(const SourceGuard &)            = delete;
         SourceGuard &operator=(const SourceGuard &) = delete;
         SourceGuard(SourceGuard &&o) noexcept {
             *this = std::move(0);
