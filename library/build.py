@@ -49,7 +49,7 @@ def get_cpu_cores() -> int:
 #=================
 # download tools
 #=================
-if is_window:
+if is_window():
     download_tools.utopia_download_tools()
 
 # ================
