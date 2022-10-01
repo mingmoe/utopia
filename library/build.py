@@ -46,6 +46,12 @@ def get_cpu_cores() -> int:
     return multiprocessing.cpu_count()
 
 
+#=================
+# download tools
+#=================
+if is_window:
+    download_tools.utopia_download_tools()
+
 # ================
 # parse arguments
 # ================
@@ -659,12 +665,14 @@ with open_log(get_stdout_log_of_library("openssl")) as stdout, \
             env['path'] += f":{get_android_llvm_root_path()}/bin"
         elif is_window():
             env['path'] += f";{get_android_llvm_root_path()}/bin"
+        else:
+            raise Exception("unknown environment varianle sperator")
 
     # 执行
     print(f"running {cmds}")
     stdout.write(f"running {cmds}\n")
-    stdout.flush()
     stderr.write(f"running {cmds}\n")
+    stdout.flush()
     stderr.flush()
 
     pwsh = subprocess.Popen(

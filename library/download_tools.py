@@ -3,7 +3,8 @@ import urllib.request
 import zipfile
 import os
 
-def priv_download_tools():
+# only called under windows
+def utopia_download_tools():
     SCRIPT_ROOT = os.path.dirname(os.path.realpath(__file__))
     DOWNLOAD_ROOT = os.path.join(SCRIPT_ROOT,"tools/")
 
@@ -37,5 +38,3 @@ def priv_download_tools():
 
     extract_file("nasm.zip","nasm")
     extract_file("perl.zip","perl")
-
-priv_download_tools()
