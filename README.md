@@ -9,13 +9,13 @@ This is the offical repo of utopia.
 <!---ubadge-auto-list-begin-->
 | Checking | Status |
 | :-------:|:------:|
-| Check-Commit-Message | ![Check-Commit-Message](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Check-Code-Format | ![Check-Code-Format](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
+| Check-Commit-Message | ![Check-Commit-Message](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Check | ![Check](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Build-And-Test-On-Windows (Debug) | ![Build-And-Test-On-Windows (Debug)](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Build-And-Test-On-Windows (Release) | ![Build-And-Test-On-Windows (Release)](https://img.shields.io/badge/build-passing-green?style=for-the-badge&logo=githubactions&logoColor=white) |
-| Build-And-Test-On-Linux (Debug, gcc) | ![Build-And-Test-On-Linux (Debug, gcc)](https://img.shields.io/badge/build-failed-red?style=for-the-badge&logo=githubactions&logoColor=white) |
-| Build-And-Test-On-Linux (Debug, clang) | ![Build-And-Test-On-Linux (Debug, clang)](https://img.shields.io/badge/build-cancelled-lightgrey?style=for-the-badge&logo=githubactions&logoColor=white) |
+| Build-And-Test-On-Linux (Debug, gcc) | ![Build-And-Test-On-Linux (Debug, gcc)](https://img.shields.io/badge/build-cancelled-lightgrey?style=for-the-badge&logo=githubactions&logoColor=white) |
+| Build-And-Test-On-Linux (Debug, clang) | ![Build-And-Test-On-Linux (Debug, clang)](https://img.shields.io/badge/build-failed-red?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Build-And-Test-On-Linux (Release, gcc) | ![Build-And-Test-On-Linux (Release, gcc)](https://img.shields.io/badge/build-cancelled-lightgrey?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Build-And-Test-On-Linux (Release, clang) | ![Build-And-Test-On-Linux (Release, clang)](https://img.shields.io/badge/build-cancelled-lightgrey?style=for-the-badge&logo=githubactions&logoColor=white) |
 | Record-Version | ![Record-Version](https://img.shields.io/badge/build-skipped-lightgrey?style=for-the-badge&logo=githubactions&logoColor=white) |
