@@ -164,3 +164,11 @@ foreach(X IN LISTS children_root)
 endforeach()
 
 message(STATUS "library roots: ${CMAKE_PREFIX_PATH}")
+
+
+# 禁用一些我们不想要的搜索方式
+set(NO_SYSTEM_ENVIRONMENT_PATH       ON)
+set(NO_CMAKE_PACKAGE_REGISTRY        ON)
+set(NO_CMAKE_SYSTEM_PATH             ON)
+set(NO_CMAKE_SYSTEM_PACKAGE_REGISTRY ON)
+

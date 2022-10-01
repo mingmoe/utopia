@@ -30,6 +30,7 @@ add_library(${UTOPIA_CORE} STATIC
     "include/utopia/scope_guard.hpp"
     "include/utopia/init.hpp"
     "include/utopia/resource.hpp"
+    "include/utopia/constexpr.hpp"
     "src/iostream.cpp")
 
 target_include_directories(${UTOPIA_CORE} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

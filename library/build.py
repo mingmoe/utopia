@@ -640,7 +640,7 @@ with open_log(get_stdout_log_of_library("openssl")) as stdout, \
         open_log(get_stderr_log_of_library("openssl")) as stderr:
 
     # prepare source
-    clear_source("openssl")
+    clear_source(get_source_path_of_library("openssl"))
 
     import shutil
 

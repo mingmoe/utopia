@@ -25,49 +25,22 @@
 
 namespace utopia::core {
 
-    class ScopeGuard {
-
-        bool                  called{ false };
-        std::function<void()> call;
-
-      public:
-
-        template<class T>
-        ScopeGuard(std::function<void()> &&t) : call(std::forward(t)) {}
-
-        ~ScopeGuard() {
-            if(!called) {
-                called = true;
-                this->call.operator()();
-            }
-        }
-
-        ScopeGuard(const ScopeGuard &)            = delete;
-        ScopeGuard(ScopeGuard &&)                 = delete;
-        ScopeGuard &operator=(const ScopeGuard &) = delete;
-        ScopeGuard &operator=(ScopeGuard &&)      = delete;
-    };
-
     template<class T>
     class SourceGuard {
       private:
 
-        bool                      called{ false };
+        std::once_flag            flag;
         std::function<void(T &&)> func;
         T                         src;
 
       public:
 
         template<class FUNC>
-        SourceGuard(FUNC &&t, T &&source) : src(source) {
-            this->func = std::forward(t);
-        }
+        SourceGuard(FUNC &&t, T &&source) :
+            src(std::forward(source)), func(std::forward(t)) {}
 
         ~SourceGuard() {
-            if(!called) {
-                called = true;
-                func(std::move(src));
-            }
+            std::call_once(flag, func);
         }
 
         T &get_source() {
