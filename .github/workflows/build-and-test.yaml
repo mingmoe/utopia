@@ -100,7 +100,7 @@ jobs:
       - name: Build
         run: |
           git submodule update --init --recursive --depth=1 library/**
-          sudo apt -y install ninja-build
+          sudo apt -y install ninja-build nasm
           pip install meson
           python ./library/build.py --${mode}
           mkdir build
