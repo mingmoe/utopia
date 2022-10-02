@@ -34,12 +34,12 @@ else()
     message(STATUS "build number not set(hint release-ready). default 0")
 endif()
 
-file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" "${UTOPIA_VERSION}.${U_PROJECT_VERSION_BUILD}")
+set(UTOPIA_VERSION "${U_PROJECT_VERSION_MAJOR}.${U_PROJECT_VERSION_MINOR}.${U_PROJECT_VERSION_PATCH}.${U_PROJECT_VERSION_BUILD}")
+
+file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" "${UTOPIA_VERSION}")
 
 message(STATUS "write version information to version.txt")
 # =================================
-set(UTOPIA_VERSION 
-"${U_PROJECT_VERSION_MAJOR}.${U_PROJECT_VERSION_MINOR}.${U_PROJECT_VERSION_PATCH}.${U_PROJECT_VERSION_BUILD}")
 message(STATUS "current utopia version:${UTOPIA_VERSION}")
 
 # others
