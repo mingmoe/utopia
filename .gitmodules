@@ -34,15 +34,6 @@
 [submodule "library/doctest"]
 	path = library/doctest
 	url = https://github.com/doctest/doctest
-[submodule "assert/noto-emoji"]
-	path = assert/noto-emoji
-	url = https://github.com/googlefonts/noto-emoji
-[submodule "assert/noto-fonts"]
-	path = assert/noto-fonts
-	url = https://github.com/notofonts/noto-fonts
-[submodule "assert/noto-cjk"]
-	path = assert/noto-cjk
-	url = https://github.com/googlefonts/noto-cjk
 [submodule "library/flac"]
 	path = library/flac
 	url = https://github.com/xiph/flac

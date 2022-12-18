@@ -16,7 +16,19 @@
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 # 设置安装路径
-set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/release")
+set(CMAKE_INSTALL_PREFIX "${UTOPIA_INSTALL_PATH}")
+
+
+# 设置辅助函数
+function(utopia_runtime_files NEED_FILES DESTINATION)
+    install(FILES ${NEED_FILES} DESTINATION "${DESTINATION}")
+    file(COPY ${NEED_FILES} DESTINATION "${UTOPIA_BUILD_TREE_INSTALL_PATH}/${DESTINATION}")
+endfunction()
+
+function(utopia_runtime_directory ORIGIN_DIRECTORY DESTINATION)
+    install(DIRECTORY ${ORIGIN_DIRECTORY} DESTINATION "${DESTINATION}")
+    file(COPY ${ORIGIN_DIRECTORY} DESTINATION "${UTOPIA_BUILD_TREE_INSTALL_PATH}/${DESTINATION}")
+endfunction()
 
 # 安装可执行文件
 install(TARGETS ${UTOPIA_CORE_TEST} DESTINATION . PERMISSIONS GROUP_EXECUTE)
@@ -25,13 +37,22 @@ install(TARGETS ${UTOPIA_CLIENT} DESTINATION . PERMISSIONS GROUP_EXECUTE)
 install(TARGETS icu DESTINATION . PERMISSIONS GROUP_EXECUTE)
 install(TARGETS OpenAL DESTINATION . PERMISSIONS GROUP_EXECUTE)
 
+# search openssl
+if(U_ANDROID_MODE OR U_UNDER_LINUX)
+    file(GLOB U_OPENSSL_FILES
+     "${UTOPIA_SYSROOT}/openssl/bin/*.so"
+    )
+elseif(U_UNDER_WINDOWS)
+    file(GLOB U_OPENSSL_FILES
+     "${UTOPIA_SYSROOT}/openssl/bin/*.dll"
+     "${UTOPIA_SYSROOT}/openssl/bin/*.pdb"
+    )
+endif()
+
+message(STATUS "Install Openssl: ${U_OPENSSL_FILES}")
+utopia_runtime_files("${U_OPENSSL_FILES}" ".")
+
 # 安装assert资产
-set(U__TEMP__ASSERT "assert")
 
-install(FILES "${UTOPIA_ASSERT}/noto-cjk/Sans/OTC/NotoSansCJK-Regular.ttc" DESTINATION "${U__TEMP__ASSERT}/font")
-install(FILES "${UTOPIA_ASSERT}/noto-fonts/hinted/ttf/NotoSans/NotoSans-Regular.ttf" DESTINATION "${U__TEMP__ASSERT}/font")
-install(FILES "${UTOPIA_ASSERT}/noto-emoji/fonts/NotoColorEmoji.ttf" DESTINATION "${U__TEMP__ASSERT}/font")
+utopia_runtime_directory("${UTOPIA_ASSERT}/icu4c-data" "${UTOPIA_ASSERT_DIR_NAME}")
 
-install(DIRECTORY "${UTOPIA_ASSERT}/icu4c-data" DESTINATION "${U__TEMP__ASSERT}")
-
-unset(U__TEMP__ASSERT)

@@ -38,3 +38,6 @@ def utopia_download_tools():
 
     extract_file("nasm.zip","nasm")
     extract_file("perl.zip","perl")
+
+if __name__  == "__main__":
+    utopia_download_tools()

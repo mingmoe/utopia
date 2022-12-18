@@ -24,11 +24,9 @@ def download_file(url,output):
 def extract_file(path,opt):
     out_dir = os.path.join(SCRIPT_ROOT,opt)
     source_file = get_download_path(path)
-
-    if not os.path.exists(out_dir) or not os.path.isdir(out_dir):
-        with zipfile.ZipFile(source_file, 'r') as zip_ref:
-            print(f"extract {source_file} to {out_dir}")
-            zip_ref.extractall(out_dir)
+    with zipfile.ZipFile(source_file, 'r') as zip_ref:
+        print(f"extract {source_file} to {out_dir}")
+        zip_ref.extractall(out_dir)
 
 
 download_file("https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-data-bin-l.zip","icu4c-data-l.zip")

@@ -440,7 +440,9 @@ class MesonTask:
 
         self.run_once(g_opts)
 
-        call_ninja(['install'], self.stdout_file, self.stderr_file, self.binary_dir)
+        # call_ninja(['install'], self.stdout_file, self.stderr_file, self.binary_dir)
+        self.run_once(['compile','-C',self.binary_dir])
+        self.run_once(['install','-C',self.binary_dir])
 
 
 def get_standard_cmake_task(name:str,options:List[str]) -> CMakeTask:

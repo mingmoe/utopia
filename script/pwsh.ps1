@@ -1,9 +1,13 @@
 
 $global:UTOPIA_PROJECT_ROOT = [System.IO.Path]::GetFullPath("$PSScriptRoot/../".Replace("\","/"))
 
+Write-Host "Entry Utopia Development Environment"
+
 function build-library($build_args){
     &python "$UTOPIA_PROJECT_ROOT/library/build.py" $build_args
 }
+
+Write-Host "Register build-library"
 
 function build-android-library($build_args){
     $ndk_path = $null
@@ -35,6 +39,8 @@ function build-android-library($build_args){
     build-library $z
 }
 
+Write-Host "Register build-android-library"
+
 <#
     .SYNOPSIS 
     IF THERE ARE SOMETHING WRONG WITH GOLANG.
@@ -65,26 +71,34 @@ function go{
     Set-Location "$Path"
 }
 
+Write-Host "Register go"
+
 function update-library(){
     $c = Get-Location
-    go-root
-    &git submodule update --init --recursive
+    go root
+    &git submodule update --init --recursive  --depth=1
     Set-Location $c
 }
+
+Write-Host "Register update-library"
 
 function clear-logs(){
     Remove-Item -Force -Recurse -Path "$UTOPIA_PROJECT_ROOT/library/*.log"
 }
 
+Write-Host "Register clear-logs"
 function commit(){
     &npm run commit
 }
 
+Write-Host "Register commit"
 function release(){
     &npm run "try-release"
 }
 
+Write-Host "Register release"
 function lint-commit(){
     &npm run lint-last-commit
 }
 
+Write-Host "Register lint-commit"
