@@ -73,7 +73,7 @@ namespace utopia::core {
         virtual float                get_float()              = 0;
         virtual double               get_double()             = 0;
         virtual long double          get_ldouble()            = 0;
-        virtual std::span<std::byte> get_bytes(size_t length) = 0;
+        virtual std::vector<std::byte> get_bytes(size_t length) = 0;
     };
 
     struct Stream : public OutputStream, public InputStream {};
@@ -88,7 +88,7 @@ namespace utopia::core {
 
         virtual void write_to(const std::span<std::byte> data)           = 0;
 
-        virtual const std::span<std::byte> read_from(std::size_t offset,
+        virtual const std::vector<std::byte> read_from(std::size_t offset,
                                                      std::size_t length) = 0;
 
         virtual void                       flush() override {}
@@ -154,7 +154,7 @@ namespace utopia::core {
         }
 
         //========== READ ==========//
-        virtual std::span<std::byte> get_bytes(size_t length) override {
+        virtual std::vector<std::byte> get_bytes(size_t length) override {
             auto s = read_from(read_offset, length);
             read_offset += length;
             return s;
@@ -259,7 +259,7 @@ namespace utopia::core {
             }
         }
 
-        virtual const std::span<std::byte> read_from(std::size_t offset,
+        virtual const std::vector<std::byte> read_from(std::size_t offset,
                                                      std::size_t length) {
             if(offset + length > datas.size()) {
                 throw utopia::core::OutOfRangeException{
@@ -267,7 +267,8 @@ namespace utopia::core {
                 };
             }
 
-            return std::span<std::byte>(datas.data() + offset, length);
+            return std::vector<std::byte>(datas.data() + offset,
+                                          datas.data() + offset + length);
         }
     };
 

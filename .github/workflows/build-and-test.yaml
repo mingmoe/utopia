@@ -73,8 +73,10 @@ jobs:
   #================================================================
   Build-And-Test-On-Linux:
     needs: [ Check ]
+    continue-on-error: true
 
     strategy:
+      fail-fast: false
       matrix:
         mode: [ 'Debug','Release' ]
         ccompiler: ['gcc','clang']
@@ -111,8 +113,10 @@ jobs:
 
   Build-And-Test-On-Windows:
     needs: [ Check ]
+    continue-on-error: true
 
     strategy:
+      fail-fast: false
       matrix:
         mode: [ 'Debug','Release' ]
 
