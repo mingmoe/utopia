@@ -1,4 +1,4 @@
-//===-------------------------- main.cpp --------------------------===//
+//===------------------------ -abort.cpp -------------------------===//
 //   Copyright (C) 2021-2022 mingmoe(me@kawayi.moe)(https://kawayi.moe)
 //
 //   This program is free software: you can redistribute it and/or modify
@@ -14,20 +14,19 @@
 //   You should have received a copy of the GNU Affero General Public License
 //===--------------------------------------------------------------===//
 
+#include "utopia/abort.hpp"
+
 #include "utopia/exception.hpp"
-#include "utopia/init.hpp"
-#include "utopia/iostream.hpp"
+#include <string_view>
 
-auto main() -> int {
-    utopia::core::setup_icu_data();
-    auto root      = utopia::core::IOException("ROOT EXCEPTION");
-    auto children  = utopia::core::IOException("CHILDREN EXCEPTION",
-                                              std::make_exception_ptr(root));
-    auto exception =
-        utopia::core::IOException("exception", std::make_exception_ptr(children));
+using namespace utopia::core;
 
 
-    utopia::core::write_stderr(exception.what());
+[[noreturn]] inline void utopia::core::abort_with_exception(
+    Exception       err,
+    source_location location) {
+    auto message = std::string_view{ err.what() };
 
-    return 0;
+    u_assert(false, message, location);
+    unreachable("should unreachable");
 }

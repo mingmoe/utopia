@@ -48,22 +48,22 @@ TEST_CASE("MemoryStream") {
     data[4] = static_cast<std::byte>(24);
     span<std::byte, 5> sp{ data };
 
-    stream.write(sp);
+    stream.write_bytes(sp);
 
     // then check
-    CHECK_EQ(stream.get_char(), 'a');
-    CHECK_EQ(stream.get_uchar(), 0);
-    CHECK_EQ(stream.get_short(), 1);
-    CHECK_EQ(stream.get_ushort(), 2);
-    CHECK_EQ(stream.get_int(), 3);
-    CHECK_EQ(stream.get_uint(), 4);
-    CHECK_EQ(stream.get_long(), 5);
-    CHECK_EQ(stream.get_ulong(), 6);
-    CHECK_EQ(stream.get_llong(), 7);
-    CHECK_EQ(stream.get_ullong(), 8);
-    CHECK_EQ(stream.get_float(), 9.0f);
-    CHECK_EQ(stream.get_double(), 10.0);
-    CHECK_EQ(stream.get_ldouble(), 11.0l);
+    CHECK_EQ(stream.get<char>(), 'a');
+    CHECK_EQ(stream.get<unsigned char>(), 0);
+    CHECK_EQ(stream.get<short>(), 1);
+    CHECK_EQ(stream.get<unsigned short>(), 2);
+    CHECK_EQ(stream.get<signed>(), 3);
+    CHECK_EQ(stream.get<unsigned>(), 4);
+    CHECK_EQ(stream.get<long>(), 5);
+    CHECK_EQ(stream.get<unsigned long>(), 6);
+    CHECK_EQ(stream.get<long long>(), 7);
+    CHECK_EQ(stream.get<unsigned long long>(), 8);
+    CHECK_EQ(stream.get<float>(), 9.0f);
+    CHECK_EQ(stream.get<double>(), 10.0);
+    CHECK_EQ(stream.get<long double>(), 11.0l);
 
     auto read = stream.get_bytes(sp.size_bytes());
     CHECK_EQ(std::to_integer<int>(read[0]), 20);

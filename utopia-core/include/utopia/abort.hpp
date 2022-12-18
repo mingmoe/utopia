@@ -24,14 +24,18 @@
 #include <sstream>
 #include <string_view>
 
-#if !defined(_MSC_VER) && !__has_builtin(__builtin_debugtrap)
+#if !defined(_MSC_VER)
+    #if !__has_builtin(__builtin_debugtrap)
     #include <csignal>
+    #endif
 #endif
 
 #include "utopia/iostream.hpp"
 #include "utopia/source_location.hpp"
 
 namespace utopia::core {
+
+    class Exception;
 
     /**
      * @brief debug断点
@@ -102,6 +106,10 @@ namespace utopia::core {
         };
         std::set_terminate(handle);
     }
+
+    [[noreturn]] inline void abort_with_exception(
+        Exception       err,
+        source_location location = source_location::current());
 
 }   // namespace utopia::core
 

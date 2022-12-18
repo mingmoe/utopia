@@ -50,6 +50,9 @@ namespace utopia::core {
 
         virtual void close() override {}
 
+        virtual void set_write_offset(OffsetPosition,
+                                      std::ptrdiff_t) {}
+
         /**
          *  @brief get the hash result
          * @note workout won't reset
@@ -107,53 +110,55 @@ namespace utopia::core {
             auto err = XXH3_freeState(state);
 
             if(err == XXH_ERROR) {
-                throw RuntimeException{ "failed to free xxhash3" };
+                abort_with_exception(
+                    RuntimeException{ "failed to free xxhash3" });
             }
         }
 
-        virtual void write(char v) override {
-            write_to(v);
-        }
-        virtual void write(unsigned char v) override {
-            write_to(v);
-        }
-        virtual void write(short v) override {
-            write_to(v);
-        }
-        virtual void write(unsigned short v) override {
-            write_to(v);
-        }
-        virtual void write(signed v) override {
-            write_to(v);
-        }
-        virtual void write(unsigned v) override {
-            write_to(v);
-        }
-        virtual void write(long v) override {
-            write_to(v);
-        }
-        virtual void write(unsigned long v) override {
-            write_to(v);
-        }
-        virtual void write(long long v) override {
-            write_to(v);
-        }
-        virtual void write(unsigned long long v) override {
-            write_to(v);
-        }
-        virtual void write(float v) override {
-            write_to(v);
-        }
-        virtual void write(double v) override {
-            write_to(v);
-        }
-        virtual void write(long double v) override {
-            write_to(v);
-        }
-        virtual void write(std::span<std::byte> bytes) override {
+        virtual void write_bytes(std::span<std::byte> bytes) override {
             for(auto byte : bytes) {
                 write_to(byte);
             }
+        }
+
+        virtual void write(char v) {
+            write_to(v);
+        }
+        virtual void write(unsigned char v) {
+            write_to(v);
+        }
+        virtual void write(short v) {
+            write_to(v);
+        }
+        virtual void write(unsigned short v) {
+            write_to(v);
+        }
+        virtual void write(signed v) {
+            write_to(v);
+        }
+        virtual void write(unsigned v) {
+            write_to(v);
+        }
+        virtual void write(long v) {
+            write_to(v);
+        }
+        virtual void write(unsigned long v) {
+            write_to(v);
+        }
+        virtual void write(long long v) {
+            write_to(v);
+        }
+        virtual void write(unsigned long long v) {
+            write_to(v);
+        }
+        virtual void write(float v) {
+            write_to(v);
+        }
+        virtual void write(double v) {
+            write_to(v);
+        }
+        virtual void write(long double v) {
+            write_to(v);
         }
 
         virtual void reset() override {

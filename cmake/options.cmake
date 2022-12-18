@@ -96,6 +96,8 @@ function(u_add_define)
     endforeach()
 endfunction()
 
+u_add_define("NOMINMAX")
+
 # 地址消毒
 option(U_OPT_ASAN "enable Address Sanitize?" OFF)
 
@@ -125,3 +127,7 @@ if(NOT U_OPT_DEBUG_BREAK)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${U_TEMP__OPT}")
     unset(U_TEMP__OPT)
 endif()
+
+
+# enable /MP
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)

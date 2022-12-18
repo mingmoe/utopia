@@ -21,12 +21,23 @@
 #pragma once
 
 #include "utopia/exception.hpp"
+#include <boost/safe_numerics/safe_integer.hpp>
+#include <concepts>
 #include <cstddef>
+#include <optional>
 #include <span>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 namespace utopia::core {
+
+    enum class OffsetPosition {
+        Current,
+        Begin,
+        End
+    };
+
 
     /**
      * @brief 流的基础操作
@@ -40,39 +51,17 @@ namespace utopia::core {
      * @brief 输出流
     */
     struct OutputStream : public StreamBase {
-        virtual void write(char)                 = 0;
-        virtual void write(unsigned char)        = 0;
-        virtual void write(short)                = 0;
-        virtual void write(unsigned short)       = 0;
-        virtual void write(signed)               = 0;
-        virtual void write(unsigned)             = 0;
-        virtual void write(long)                 = 0;
-        virtual void write(unsigned long)        = 0;
-        virtual void write(long long)            = 0;
-        virtual void write(unsigned long long)   = 0;
-        virtual void write(float)                = 0;
-        virtual void write(double)               = 0;
-        virtual void write(long double)          = 0;
-        virtual void write(std::span<std::byte>) = 0;
+        virtual void set_write_offset(OffsetPosition pos,
+                                      std::ptrdiff_t offset) = 0;
+        virtual void write_bytes(std::span<std::byte>)       = 0;
     };
 
     /**
      * @brief 输入流
     */
     struct InputStream : public StreamBase {
-        virtual char                 get_char()               = 0;
-        virtual unsigned char        get_uchar()              = 0;
-        virtual short                get_short()              = 0;
-        virtual unsigned short       get_ushort()             = 0;
-        virtual signed               get_int()                = 0;
-        virtual unsigned             get_uint()               = 0;
-        virtual long                 get_long()               = 0;
-        virtual unsigned long        get_ulong()              = 0;
-        virtual long long            get_llong()              = 0;
-        virtual unsigned long long   get_ullong()             = 0;
-        virtual float                get_float()              = 0;
-        virtual double               get_double()             = 0;
-        virtual long double          get_ldouble()            = 0;
+        virtual void                   set_read_offset(OffsetPosition pos,
+                                                       std::ptrdiff_t offset) = 0;
         virtual std::vector<std::byte> get_bytes(size_t length) = 0;
     };
 
@@ -82,76 +71,80 @@ namespace utopia::core {
      * @brief 简单流接口。用户只需要实现read和wirte即可使用。
     */
     class SimplyStream : public Stream {
-        std::size_t read_offset{ 0 };
+        ::boost::safe_numerics::safe<std::size_t> write_offset, read_offset;
+
+        void modify_offset(OffsetPosition                             pos,
+                           std::ptrdiff_t                             offset,
+                           ::boost::safe_numerics::safe<std::size_t> &value) {
+            auto l = this->get_length();
+
+            if(!l.has_value() && pos == OffsetPosition::End) {
+                throw UnrealizedException{
+                    "no supported get length of stream"
+                };
+            }
+
+            ::boost::safe_numerics::safe<std::size_t> v;
+
+            switch(pos) {
+                case OffsetPosition::Begin:
+                    value = offset;
+                    break;
+                case OffsetPosition::Current:
+                    value += offset;
+                    break;
+                case OffsetPosition::End:
+                    v     = l.value();
+                    value = v + offset;
+                    break;
+            }
+        }
+
+        virtual void                         write_to(std::size_t                offset,
+                                                      const std::span<std::byte> data) = 0;
+
+        virtual const std::vector<std::byte> read_from(std::size_t offset,
+                                                       std::size_t length) = 0;
 
       public:
 
-        virtual void write_to(const std::span<std::byte> data)           = 0;
-
-        virtual const std::vector<std::byte> read_from(std::size_t offset,
-                                                     std::size_t length) = 0;
+        /**
+         * @brief 获取流的长度，如果不支持（如未知或无限长度，则返回std::nullopt）
+        */
+        virtual std::optional<std::size_t> get_length() = 0;
 
         virtual void                       flush() override {}
         virtual void                       close() override {}
 
+        virtual void InputStream::set_read_offset(OffsetPosition pos,
+                                                  std::ptrdiff_t offset) {
+            this->modify_offset(pos, offset, this->read_offset);
+        }
+
+        virtual void OutputStream::set_write_offset(OffsetPosition pos,
+                                                    std::ptrdiff_t offset) {
+            this->modify_offset(pos, offset, this->write_offset);
+        }
+
         //========== WRITE ==========//
-        virtual void write(char v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
+        virtual void write_bytes(std::span<std::byte> v) override {
+            write_to(write_offset, v);
+            this->write_offset += v.size();
         }
-        virtual void write(unsigned char v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
+
+        template<class T>
+        void write(T value) {
+            static_assert(std::is_integral_v<T> == true ||
+                          std::is_floating_point_v<T> == true ||
+                          std::is_same_v<T, bool> == true);
+
+            auto                 ptr = reinterpret_cast<std::byte *>(&value);
+
+            std::span<std::byte> buf(ptr, ptr + sizeof(T));
+
+            write_bytes(buf);
         }
-        virtual void write(short v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(unsigned short v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(signed v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(unsigned v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(long v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(unsigned long v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(long long v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(unsigned long long v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(float v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(double v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(long double v) override {
-            write_to(std::span<std::byte>(reinterpret_cast<std::byte *>(&v),
-                                          sizeof(v)));
-        }
-        virtual void write(std::span<std::byte> v) override {
-            for(auto c : v) {
-                write(std::to_integer<unsigned char>(c));
-            }
-        }
+
 
         //========== READ ==========//
         virtual std::vector<std::byte> get_bytes(size_t length) override {
@@ -159,87 +152,16 @@ namespace utopia::core {
             read_offset += length;
             return s;
         }
-        virtual char get_char() override {
-            const auto length = sizeof(this->get_char());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return std::to_integer<char>(s[0]);
-        }
-        virtual unsigned char get_uchar() override {
-            const auto length = sizeof(this->get_uchar());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return std::to_integer<unsigned char>(s[0]);
-        }
-        virtual short get_short() override {
-            const auto length = sizeof(this->get_short());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<short *>((s.data()));
-        }
-        virtual unsigned short get_ushort() override {
-            const auto length = sizeof(this->get_ushort());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<unsigned short *>((s.data()));
-        }
-        virtual signed get_int() override {
-            const auto length = sizeof(this->get_int());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<signed *>((s.data()));
-        }
-        virtual unsigned get_uint() override {
-            const auto length = sizeof(this->get_uint());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<unsigned *>((s.data()));
-        }
-        virtual long get_long() override {
-            const auto length = sizeof(this->get_long());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<long *>((s.data()));
-        }
-        virtual unsigned long get_ulong() override {
-            const auto length = sizeof(this->get_ulong());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<unsigned long *>((s.data()));
-        }
-        virtual long long get_llong() override {
-            const auto length = sizeof(this->get_llong());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<long long *>((s.data()));
-        }
-        virtual unsigned long long get_ullong() override {
-            const auto length = sizeof(this->get_ullong());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<unsigned long long *>((s.data()));
-        }
-        virtual float get_float() override {
-            const auto length = sizeof(this->get_float());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<float *>((s.data()));
-        }
-        virtual double get_double() override {
-            const auto length = sizeof(this->get_double());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<double *>((s.data()));
-        }
-        virtual long double get_ldouble() override {
-            const auto length = sizeof(this->get_ldouble());
-            auto       s      = read_from(read_offset, length);
-            read_offset += length;
-            return *reinterpret_cast<long double *>((s.data()));
-        }
 
-        void clear() {
-            this->read_offset = 0;
+        template<class T>
+        T get() {
+            static_assert(std::is_integral_v<T> == true ||
+                          std::is_floating_point_v<T> == true ||
+                          std::is_same_v<T, bool> == true);
+
+            auto v = get_bytes(sizeof(T));
+
+            return *reinterpret_cast<T *>(v.data());
         }
     };
 
@@ -249,18 +171,15 @@ namespace utopia::core {
     class MemoryStream : public SimplyStream {
         std::vector<std::byte> datas;
 
-      public:
+        virtual void           SimplyStream::write_to(std::size_t                offset,
+                                            const std::span<std::byte> data) {
+            datas.resize(offset + data.size());
 
-        virtual void write_to(const std::span<std::byte> data) {
-            datas.reserve(datas.size() + data.size());
-
-            for(auto &b : data) {
-                datas.push_back(b);
-            }
+            memcpy(datas.data() + offset, data.data(), data.size());
         }
 
-        virtual const std::vector<std::byte> read_from(std::size_t offset,
-                                                     std::size_t length) {
+        virtual const std::vector<std::byte>
+            SimplyStream::read_from(std::size_t offset, std::size_t length) {
             if(offset + length > datas.size()) {
                 throw utopia::core::OutOfRangeException{
                     "MemoryStream:read out of range"
@@ -269,6 +188,15 @@ namespace utopia::core {
 
             return std::vector<std::byte>(datas.data() + offset,
                                           datas.data() + offset + length);
+        }
+
+      public:
+
+        using SimplyStream::get;
+        using SimplyStream::write;
+
+        virtual std::optional<std::size_t> SimplyStream::get_length() {
+            return datas.size();
         }
     };
 

@@ -25,10 +25,14 @@
 #include <cstdint>
 
 // clang has no __builtin_COLUMN
-#if __has_builtin(__builtin_COLUMN)
-    #define UTOPIA_BUILT_IN_COLUMN __builtin_COLUMN()
+#if !defined(_MSC_VER)
+    #if __has_builtin(__builtin_COLUMN)
+        #define UTOPIA_BUILT_IN_COLUMN __builtin_COLUMN()
+    #else
+        #define UTOPIA_BUILT_IN_COLUMN 0
+    #endif
 #else
-    #define UTOPIA_BUILT_IN_COLUMN 0
+    #define UTOPIA_BUILT_IN_COLUMN __builtin_COLUMN()
 #endif
 
 namespace utopia::core {

@@ -104,23 +104,30 @@ namespace utopia::core {
             if(inner) {
                 ss << "\n===> With Inner Exception:";
 
+                std::string temp;
+
                 try {
                     std::rethrow_exception(inner);
                 }
                 catch(const Exception &e) {
-                    ss << e.what();
+                    temp = e.what();
                 }
                 catch(const std::exception &e) {
-                    ss << e.what();
+                    temp = e.what();
                 }
                 catch(const std::string &e) {
-                    ss << e;
+                    temp = e;
                 }
                 catch(const char *e) {
-                    ss << std::string_view{ e };
+                    temp = std::string_view{ e };
                 }
                 catch(...) {
-                    ss << "unknown inner exception";
+                    temp = "unknown inner exception";
+                }
+                
+                std::stringstream tempbuf(temp);
+                while(std::getline(tempbuf, temp, '\n')) {
+                    ss << '\t' << temp << '\n';
                 }
             }
 
@@ -142,5 +149,7 @@ namespace utopia::core {
     using RuntimeException    = UniversalException<"RuntimeException">;
 
     using OutOfRangeException = UniversalException<"OutOfRangeException">;
+    
+    using UnrealizedException = UniversalException<"UnrealizedException">;
 
 }   // namespace utopia::core

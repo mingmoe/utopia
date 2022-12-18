@@ -18,27 +18,10 @@
 
 #include "utopia/exception.hpp"
 #include "utopia/stream.hpp"
+#include <stream>
 #include <fstream>
 
 namespace utopia::core {
-
-    /**
-     * @brief 资源类型
-    */
-    enum class ResourceType {
-        /**
-         * @brief 文件
-        */
-        File,
-        /**
-         * @brief 网络文件
-        */
-        Net,
-        /**
-         * @brief 程序自己构造的资源
-        */
-        Customize
-    };
 
     /**
      * @brief 负责管理资源，如文件等。
@@ -58,11 +41,6 @@ namespace utopia::core {
          * @brief 打开资源流
         */
         virtual Stream OpenResource() = 0;
-
-        /**
-         * @brief 打开只读资源流
-        */
-        virtual InputStream     OpenReadOnlyStream() const        = 0;
 
         ResourceHandle         &operator=(const ResourceHandle &) = delete;
         virtual ResourceHandle &operator=(ResourceHandle &&)      = default;
